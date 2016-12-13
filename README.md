@@ -1,4 +1,4 @@
-### Crowd Lector
+# Crowd Lector
 
 A tool to choose which phrases exported by Lector are correct and which are false positive
 
