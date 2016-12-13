@@ -7,5 +7,5 @@
 - (**Lorenzo + Marco**) Lettura dei dati degli utenti (legge la post e la processa (carica i dati sul db))
 - (**Veronica**) dato un utente, seleziona le domande da porgli (Dynamically engaging workers) 
 - (**Lorenzo + Marco**) Express + Schema
-- (**Gaetano**) Frontend (bootstrap & co)
+- (**Gaetano**) Frontend (bootstrap & co) and architecture
 - (**Nicola**) Trova nel database le frasi (Phrase + Relation name) “concluse” (Fare una query mongoose che trovi tutti gli oggetti Question che abbiano due risposte concordi o tre risposte)
