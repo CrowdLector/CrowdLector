@@ -6,5 +6,5 @@ Used tecnologies:
 - Node.js + express
 - MongoDB + Mongoose
 
-## Instruction
+## Instructions
 Run the bat or sh files depending on your OS, then go to localhost:3000.
