@@ -1,30 +1,30 @@
 var express = require('express');
 var router = express.Router();
-var QuestionFacade = require('./QuestionFacade.js');
+var QuestionHelper = require('../helpers/QuestionHelper.js');
 
 /*
  * GET
  */
-router.get('/', QuestionFacade.list);
+router.get('/', QuestionHelper.list);
 
 /*
  * GET
  */
-router.get('/:id', QuestionFacade.show);
+router.get('/:id', QuestionHelper.show);
 
 /*
  * POST
  */
-router.post('/', QuestionFacade.create);
+router.post('/', QuestionHelper.create);
 
 /*
  * PUT
  */
-router.put('/:id', QuestionFacade.update);
+router.put('/:id', QuestionHelper.update);
 
 /*
  * DELETE
  */
-router.delete('/:id', QuestionFacade.remove);
+router.delete('/:id', QuestionHelper.remove);
 
 module.exports = router;
