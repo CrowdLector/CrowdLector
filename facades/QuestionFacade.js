@@ -1,7 +1,7 @@
 var QuestionModel = require('../models/QuestionModel.js');
 
 /**
- * QuestionController.js
+ * QuestionHelper.js
  *
  * @description :: Server-side logic for managing Questions.
  */
@@ -10,15 +10,15 @@ module.exports = {
     /**
      * QuestionController.list()
      */
-    list: function (cb) {
+    list: function (callback) {
         QuestionModel.find(function (err, Questions) {
             if (err) {
-                cb(500, {
+                callback(500, {
                     message: 'Error when getting Question.',
                     error: err
                 });
             } else {
-                cb(200, Questions);
+                callback(200, Questions);
             }
         });
     },
@@ -26,95 +26,94 @@ module.exports = {
     /**
      * QuestionController.show()
      */
-    show: function (req, res) {
-        var id = req.params.id;
-        QuestionModel.findOne({_id: id}, function (err, Question) {
+    show: function (params, callback) {
+        QuestionModel.findOne({_id: params.id}, function (err, Question) {
             if (err) {
-                return res.status(500).json({
+                callback(500, {
                     message: 'Error when getting Question.',
                     error: err
                 });
             }
-            if (!Question) {
-                return res.status(404).json({
-                    message: 'No such Question'
-                });
+            else
+            {
+                if (!Question) {
+                    callback(404, {
+                        message: 'No such Question'
+                    });
+                } else {
+                    callback(200, Question);
+                }
             }
-            return res.json(Question);
         });
     },
 
     /**
      * QuestionController.create()
      */
-    create: function (req, res) {
-        var Question = new QuestionModel({
-			Relation : req.body.Relation,
-			Phrase : req.body.Phrase,
-			Anwser : req.body.Anwser,
-			Utenti : req.body.Utenti
-        });
+    create: function (params, callback) {
+        var Question = new QuestionModel( params );
 
         Question.save(function (err, Question) {
             if (err) {
-                return res.status(500).json({
+                callback(500, {
                     message: 'Error when creating Question',
                     error: err
                 });
+            } else {
+                callback(201, Question);
             }
-            return res.status(201).json(Question);
         });
     },
 
     /**
      * QuestionController.update()
      */
-    update: function (req, res) {
-        var id = req.params.id;
-        QuestionModel.findOne({_id: id}, function (err, Question) {
+    update: function (params, callback) {
+        QuestionModel.findOne({_id: params.id}, function (err, Question) {
             if (err) {
-                return res.status(500).json({
+                callback(500, {
                     message: 'Error when getting Question',
                     error: err
                 });
-            }
-            if (!Question) {
-                return res.status(404).json({
-                    message: 'No such Question'
-                });
-            }
+            } else {
+                if (!Question) {
+                    callback(404, {
+                        message: 'No such Question'
+                    });
+                } else {
+                    Question.Relation = params.modifiedObj.Relation ? params.modifiedObj.Relation : Question.Relation;
+                    Question.Phrase = params.modifiedObj.Phrase ? params.modifiedObj.Phrase : Question.Phrase;
+                    Question.Anwser = params.modifiedObj.Anwser ? params.modifiedObj.Anwser : Question.Anwser;
+                    Question.Users = params.modifiedObj.Users ? params.modifiedObj.Users : Question.Users;
 
-            Question.Relation = req.body.Relation ? req.body.Relation : Question.Relation;
-			Question.Phrase = req.body.Phrase ? req.body.Phrase : Question.Phrase;
-			Question.Anwser = req.body.Anwser ? req.body.Anwser : Question.Anwser;
-			Question.Utenti = req.body.Utenti ? req.body.Utenti : Question.Utenti;
-			
-            Question.save(function (err, Question) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Error when updating Question.',
-                        error: err
+                    Question.save(function (err, Question) {
+                        if (err) {
+                            callback(500, {
+                                message: 'Error when updating Question.',
+                                error: err
+                            });
+                        } else {
+                            callback(200, Question);
+                        }
                     });
                 }
-
-                return res.json(Question);
-            });
+            }
         });
     },
 
     /**
      * QuestionController.remove()
      */
-    remove: function (req, res) {
-        var id = req.params.id;
-        QuestionModel.findByIdAndRemove(id, function (err, Question) {
+    remove: function (params, callback) {
+        QuestionModel.findByIdAndRemove(params.id, function (err, Question) {
             if (err) {
-                return res.status(500).json({
+                callback(500, {
                     message: 'Error when deleting the Question.',
                     error: err
                 });
+            } else {
+                callback(204, null);
             }
-            return res.status(204).json();
         });
     }
 };
