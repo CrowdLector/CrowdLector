@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var QuestionFacade = require('../controllers/QuestionFacade.js');
+var QuestionFacade = require('./QuestionFacade.js');
 
 /*
  * GET

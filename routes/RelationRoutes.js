@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var RelationFacade = require('../controllers/RelationFacade.js');
+var RelationFacade = require('./RelationFacade.js');
 
 /*
  * GET
