@@ -41,3 +41,6 @@ jspm_packages
 MongoDB/*
 data/*
 database/*
+
+# WebStorm
+.idea
