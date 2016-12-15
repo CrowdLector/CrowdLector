@@ -8,7 +8,7 @@ var QuestionModel = require('../models/QuestionModel.js');
 module.exports = {
 
     /**
-     * QuestionController.list()
+     * QuestionFacade.list()
      */
     list: function (callback) {
         QuestionModel.find(function (err, Questions) {
@@ -24,7 +24,7 @@ module.exports = {
     },
 
     /**
-     * QuestionController.show()
+     * QuestionFacade.show()
      */
     show: function (params, callback) {
         QuestionModel.findOne({_id: params.id}, function (err, Question) {
@@ -48,7 +48,7 @@ module.exports = {
     },
 
     /**
-     * QuestionController.create()
+     * QuestionFacade.create()
      */
     create: function (params, callback) {
         var Question = new QuestionModel( params.newObj );
@@ -66,7 +66,7 @@ module.exports = {
     },
 
     /**
-     * QuestionController.update()
+     * QuestionFacade.update()
      */
     update: function (params, callback) {
         QuestionModel.findOne({_id: params.id}, function (err, Question) {
@@ -102,7 +102,7 @@ module.exports = {
     },
 
     /**
-     * QuestionController.remove()
+     * QuestionFacade.remove()
      */
     remove: function (params, callback) {
         QuestionModel.findByIdAndRemove(params.id, function (err, Question) {

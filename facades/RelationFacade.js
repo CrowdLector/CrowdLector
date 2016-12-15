@@ -1,14 +1,14 @@
 var RelationModel = require('../models/RelationModel.js');
 
 /**
- * RelationController.js
+ * RelationFacade.js
  *
  * @description :: Server-side logic for managing Relations.
  */
 module.exports = {
 
     /**
-     * RelationController.list()
+     * RelationFacade.list()
      */
     list: function (callback) {
         RelationModel.find(function (err, Relations) {
@@ -24,7 +24,7 @@ module.exports = {
     },
 
     /**
-     * RelationController.show()
+     * RelationFacade.show()
      */
     show: function (params, callback) {
         RelationModel.findOne({_id: params.id}, function (err, Relation) {
@@ -46,7 +46,7 @@ module.exports = {
     },
 
     /**
-     * RelationController.create()
+     * RelationFacade.create()
      */
     create: function (params, callback) {
         var Relation = new RelationModel(params.newObj);
@@ -64,7 +64,7 @@ module.exports = {
     },
 
     /**
-     * RelationController.update()
+     * RelationFacade.update()
      */
     update: function (params, callback) {
         RelationModel.findOne({_id: params.id}, function (err, Relation) {
@@ -100,7 +100,7 @@ module.exports = {
     },
 
     /**
-     * RelationController.remove()
+     * RelationFacade.remove()
      */
     remove: function (params, callback) {
         RelationModel.findByIdAndRemove(params.id, function (err, Relation) {
