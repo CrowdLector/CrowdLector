@@ -51,7 +51,7 @@ module.exports = {
      * QuestionController.create()
      */
     create: function (params, callback) {
-        var Question = new QuestionModel( params );
+        var Question = new QuestionModel( params.newObj );
 
         Question.save(function (err, Question) {
             if (err) {

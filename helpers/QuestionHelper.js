@@ -24,11 +24,12 @@ module.exports = {
     },
 
     create: function (req, res) {
-        var params = {
-            Relation : req.body.Relation,
-            Phrase : req.body.Phrase,
-            Anwser : req.body.Anwser,
-            Utenti : req.body.Utenti
+        var params = { newObj : {
+                Relation : req.body.Relation,
+                Phrase : req.body.Phrase,
+                Anwser : req.body.Anwser,
+                Utenti : req.body.Utenti
+            }
         };
 
         QuestionFacade.create(params, function(code, response){
