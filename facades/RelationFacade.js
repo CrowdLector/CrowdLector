@@ -130,7 +130,7 @@ module.exports = {
     },
 
     findRelationByRepresentativePhrase : function(params, callback){
-        RelationModel.findOne({'RepresentativePhrase': params.representativePhrase }, function (err, relation) {
+        RelationModel.find({'RepresentativePhrase': params.representativePhrase }, function (err, relation) {
             if (err) {
                 callback(500, {
                     message: 'Error when getting Relation.',
