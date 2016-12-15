@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var RelationModel = require('../models/RelationModel.js');
 var QuestionModel = require('../models/QuestionModel.js');
 
-var RelationFacade = require('./RelationFacade.js');
+var RelationFacade = require('../facade/RelationFacade.js');
 
 
 module.exports = {
