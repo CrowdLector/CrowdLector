@@ -113,5 +113,32 @@ module.exports = {
                 callback(204, null);
             }
         });
-    }
+    },
+
+    findRelationByName : function(params, callback){
+        RelationModel.find({'Name': params.name }, function (err, relation) {
+            if (err) {
+                callback(500, {
+                    message: 'Error when getting Relation.',
+                    error: err
+                });
+            } else {
+                callback(200, relation);
+            }
+        });
+
+    },
+
+    findRelationByRepresentativePhrase : function(params, callback){
+        RelationModel.findOne({'RepresentativePhrase': params.representativePhrase }, function (err, relation) {
+            if (err) {
+                callback(500, {
+                    message: 'Error when getting Relation.',
+                    error: err
+                });
+            } else {
+                callback(200, relation);
+            }
+        });
+    },
 };
