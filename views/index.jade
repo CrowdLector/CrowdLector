@@ -3,3 +3,20 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  p Please select the correct answer for every question. 
+  p Keep in mind that our goal is to find sentences that can express a relation and we don't want the time of the sentence 
+    | to be taken into account, 
+    br
+    b Example: 
+    | "was married to" for us is equivalent to "is married to", but not equivalent to "has met".
+
+  form.form-group(method="POST")
+    .form-group
+      .row
+        .col-lg-4
+          label(for="email") Please insert your email address 
+      .row
+        .col-lg-4
+          input.form-control(type="email", id="email")
+        .col-lg-1
+          input.btn.btn-primary.form-control(type="Submit", value="Submit", id="submit")
