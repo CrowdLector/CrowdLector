@@ -1,30 +1,30 @@
 var express = require('express');
 var router = express.Router();
-var RelationFacade = require('./RelationFacade.js');
+var RelationHelper = require('../helpers/RelationHelper.js');
 
 /*
  * GET
  */
-router.get('/', RelationFacade.list);
+router.get('/', RelationHelper.list);
 
 /*
  * GET
  */
-router.get('/:id', RelationFacade.show);
+router.get('/:id', RelationHelper.show);
 
 /*
  * POST
  */
-router.post('/', RelationFacade.create);
+router.post('/', RelationHelper.create);
 
 /*
  * PUT
  */
-router.put('/:id', RelationFacade.update);
+router.put('/:id', RelationHelper.update);
 
 /*
  * DELETE
  */
-router.delete('/:id', RelationFacade.remove);
+router.delete('/:id', RelationHelper.remove);
 
 module.exports = router;
