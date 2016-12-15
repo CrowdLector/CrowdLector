@@ -7,4 +7,5 @@ Used tecnologies:
 - MongoDB + Mongoose
 
 ## Instructions
-Run the bat or sh files depending on your OS, then go to localhost:3000.
+Run the bat or sh files depending on your OS, then go to http://localhost:3000.
+
