@@ -1,9 +1,9 @@
-var QuestionFacade = require('../facades/QuestionFacade.js');
+var PhraseFacade = require('../facades/PhraseFacade.js');
 
 module.exports = {
 
     list: function (req, res) {
-        QuestionFacade.list(function(code, response){
+        PhraseFacade.list(function(code, response){
             if(code==200){
                 return res.json(response);
             } else {
@@ -14,7 +14,7 @@ module.exports = {
 
     show: function (req, res) {
         var params = {id: req.params.id};
-        QuestionFacade.show(params, function(code, response){
+        PhraseFacade.show(params, function(code, response){
             if(code==200){
                 return res.json(response);
             } else {
@@ -32,7 +32,7 @@ module.exports = {
             }
         };
 
-        QuestionFacade.create(params, function(code, response){
+        PhraseFacade.create(params, function(code, response){
             if(code==201){
                 return res.json(response);
             } else {
@@ -51,7 +51,7 @@ module.exports = {
                 Users: req.body.Utenti
             }
         };
-        QuestionFacade.update(params, function(code, response){
+        PhraseFacade.update(params, function(code, response){
             if(code==200){
                 return res.json(response);
             } else {
@@ -62,7 +62,7 @@ module.exports = {
 
     remove: function (req, res) {
         var params = {id: req.params.id};
-        QuestionFacade.update(params, function(code, response){
+        PhraseFacade.update(params, function(code, response){
             if(code==204){
                 return res.json(response);
             } else {
