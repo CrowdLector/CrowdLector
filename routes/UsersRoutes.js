@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var UsersFacade = require('./UsersFacade.js');
+var UsersFacade = require('../facades/UsersFacade.js');
 
 /*
  * GET
