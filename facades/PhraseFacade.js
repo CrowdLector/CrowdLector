@@ -11,7 +11,7 @@ module.exports = {
      * PhraseFacade.listByRelationName()
      */
     listByRelationName: function (relationName, callback) {
-        PhraseModel.find({'RelationName': relationName}, function (err, Phrases) {
+        PhraseModel.find({'RelationName': relationName}).populate('Users').exec(function (err, Phrases) {
             if (err) {
                 callback(err, null);
             } else {
