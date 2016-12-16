@@ -8,6 +8,19 @@ var RelationModel = require('../models/RelationModel.js');
 module.exports = {
 
     /**
+     * RelationFacade.pagedList()
+     */
+    pagedList: function (page, resultsPerPage, callback) {
+        RelationModel.find().sort({Name: -1}).skip((page-1)*resultsPerPage).limit(resultsPerPage).exec(function (err, Relations) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(0, Relations);
+            }
+        });
+    },
+
+    /**
      * RelationFacade.list()
      */
     list: function (callback) {

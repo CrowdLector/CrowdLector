@@ -7,6 +7,19 @@ var PhraseModel = require('../models/PhraseModel.js');
  */
 module.exports = {
 
+     /**
+     * PhraseFacade.listByRelationName()
+     */
+    listByRelationName: function (relationName, callback) {
+        PhraseModel.find({'RelationName': relationName}, function (err, Phrases) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(0, Phrases);
+            }
+        });
+    },
+
     /**
      * PhraseFacade.list()
      */
