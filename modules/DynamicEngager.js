@@ -2,7 +2,17 @@ var RelationFacade = require('../facade/RelationFacade.js');
 var PhraseFacade = require('../facade/PhraseFacade.js');
 var UsersFacade = require('../facade/UsersFacade.js');
 
-//set resultsPerPage = 1
+/**
+ * selectQuestions(userId, page, resultsPerPage, callback)
+ *
+ * @description :: Selects the phrases to show to the user. 
+ * Starts from a bunch of Relations (from page 1 and at least 1 resultsPerPage),
+ * then verifies that there is at least 1 phrase to show to that user, 
+ * if not goes to the next page, if there is at least 1 phrase, puts it in a callback.
+ * Returns database error if no phrases are left for any Relation.
+ * 
+ * Exported version hides recursion and takes less arguments. See module.export.
+ */
 function selectQuestions(userId, page, resultsPerPage, callback) {
     RelationFacade.pagedList(page, resultsPerPage, function (err, data){
         if(err){
@@ -19,7 +29,7 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                            // ' user id ' + userId);
                             if(phrase.Users.indexOf(userId) == -1 && !outcome)
                                 phrasesForUser.push(phrase);
-                            if(i == phrasesRef.length - 1)
+                            if(i == phrasesRef.length - 1 && index == data.length - 1)
                                 if(phrasesForUser.length == 0)
                                     selectQuestions(userId, ++page, resultsPerPage, callback);
                                 else 
@@ -49,39 +59,6 @@ function hasConsensus(answers, callback) {
 }
 
 module.export = {
-    selectQuestions: function(userId, callback) { selectQuestions(userId, 1, 1, callback); }
+    selectQuestionsForUser: function(userId, callback) { selectQuestions(userId, 1, 1, callback); },
+    selectQuestionsForUserBuffered: function(userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, callback); }
 }
-
-
-
-// test
-/*
-function pagedList(page, resultsPerPage, callback) {
-        
-                callback(0, [{
-	'Name' : 'Spouse',
-	'RepresentativePhrase' : 'is married to',
-	'ObjectType' : 'Person',
-	'SubjectType' : 'Person'
-}]);
-    }
-
- function listByRelationName(relationName, callback) {
-                       callback(0, 	[{
-	'RelationName' : 'Spouse',
-	'Phrase' : 'met',
-	'Answers' : [0,1],
-	'Users' : [1,3]
-            },
-            {
-	'RelationName' : 'Spouse', // redundant for find without join
-	'Phrase' : 'has married',
-	'Answers' : [0],
-	'Users' : [1]
-                       }]);
-
-    }
-
-//hasConsensus([0], function(outcome){ console.log(outcome) });
-selectQuestions(3, 1, 1, function(err, phrases){console.log(phrases)});
-*/
