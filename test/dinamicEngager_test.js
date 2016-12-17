@@ -1,29 +1,50 @@
 
-//set resultsPerPage = 1
 function selectQuestions(userId, page, resultsPerPage, callback) {
-    /*RelationFacade.*/pagedList(page, resultsPerPage, function (err, data){
+    // takes a paged list of Relations
+    /*RelationFacade.*/pagedList(page, resultsPerPage, function (err, relations){
         if(err){
+            // If there are no relations left ends the stack of recursion with an error.
+            // This means that no phrases are left for that user to evaluate.
             callback(err, null);
         }
         else {
-            data.forEach(function(relation, index, relations){
+            // For each Relation obtained check if there are phrases to show.
+            relations.every(function(relation, index, relationsRef){
+                // Phrases to show will be stored in this array, reinitialized for each Relation.
                 var phrasesForUser = [];
+                // Gets all the phrases by Relation.Name.
                 /*PhraseFacade.*/listByRelationName(relation.Name, function(err, phrases){
-                    phrases.forEach(function(phrase, i, phrasesRef){
-                        hasConsensus(phrase.Answers, function(outcome){
+                    // For each Phrase checks if it has consensus and if the given user has already evalued it.
+                    phrases.every(function(phrase, i, phrasesRef){
+                        hasConsensus(phrase.Answers, function(phraseHasConsensus){
+                            // debug
+                            /*
                             console.log('Answers: ' + phrase.Answers + ' outcome: '  + outcome + ' user id index: ' + 
                             phrase.Users.indexOf(userId) + ' utenti per frase: ' + phrase.Users +
-                            ' user id ' + userId);
-                            if(phrase.Users.indexOf(userId) == -1 && !outcome)
+                            ' user id ' + userId); 
+                            */
+                            // If user has not evalued it AND Phrase doesn't have consensus, adds it to phrasesForUser
+                            if(phrase.Users.indexOf(userId) == -1 && !phraseHasConsensus)
                                 phrasesForUser.push(phrase);
-                            if(i == phrasesRef.length - 1 && index == data.length - 1)
-                                if(phrasesForUser.length == 0)
-                                    selectQuestions(userId, ++page, resultsPerPage, callback);
-                                else 
-                                    callback(0, phrasesForUser);
-                        })
+                            // If this is the last iteration of the inner loop and we have results then 
+                            // calls the callback and ends the recursion.
+                            if(i == phrasesRef.length - 1 && phrasesForUser.length != 0) {
+                                callback(0, phrasesForUser);
+                                return false;
+                            }
+                            // If this is the last iteration of both loops then recursively call selectQuestions on next page
+                            if(i == phrasesRef.length - 1 && index == relationsRef.length - 1 && phrasesForUser.length == 0)
+                                selectQuestions(userId, ++page, resultsPerPage, callback);
+                                return false;
+                            })
+                            // else continue looping on phrases
+                            return true;
                     })
                 });
+                // If phrasesForUser has obtained stuff from at least 1 phrase then exit the loop on relations
+                if(phrasesForUser.length != 0) return false;
+                // else continue looping on relations
+                else return true;
             })
         }
     });
@@ -75,20 +96,20 @@ function pagedList(page, resultsPerPage, callback) {
 	'RelationName' : 'Spouse',
 	'Phrase' : 'met',
 	'Answers' : [0,1],
-	'Users' : [1,3]
+	'Users' : [3,2]
             },
             {
 	'RelationName' : 'Spouse', // redundant for find without join
 	'Phrase' : 'has married',
-	'Answers' : [0],
-	'Users' : [1]
+	'Answers' : [0,1],
+	'Users' : [1,2]
                        }]);
                        else 
                        callback(0, 	[{
 	'RelationName' : 'Spouse2',
 	'Phrase' : 'met2',
-	'Answers' : [0,1],
-	'Users' : [3]
+	'Answers' : [0,0],
+	'Users' : [1,3]
             },
             {
 	'RelationName' : 'Spouse2', // redundant for find without join
@@ -99,4 +120,4 @@ function pagedList(page, resultsPerPage, callback) {
     }
 
 //hasConsensus([0], function(outcome){ console.log(outcome) });
-selectQuestions(1, 1, 2, function(err, phrases){console.log(phrases)});
+selectQuestions(2, 1, 2, function(err, phrases){console.log(phrases)});
