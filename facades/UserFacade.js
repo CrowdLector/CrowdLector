@@ -13,12 +13,13 @@ module.exports = {
     list: function (callback) {
         UserModel.find(function (err, Users) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting User.',
                     error: err
-                });
+                }, null);
             } else {
-                callback(200, Users);
+                callback(0, Users); //200
             }
         });
     },
@@ -29,17 +30,19 @@ module.exports = {
     show: function (params, callback) {
         UserModel.findOne({_id: params.id}, function (err, User) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting User.',
                     error: err
-                });
+                }, null);
             } else {
                 if (!User) {
-                    callback(404, {
+                    callback({
+                        code: 404,
                         message: 'No such User'
-                    });
+                    }, null);
                 } else {
-                    callback(200, User);
+                    callback(0, User); //200
                 }
             }
         });
@@ -53,12 +56,13 @@ module.exports = {
 
         User.save(function (err, User) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when creating User',
                     error: err
-                });
+                }, null);
             } else {
-                callback(201, User);
+                callback(0, User); //201
             }
         });
     },
@@ -69,15 +73,17 @@ module.exports = {
     update: function (params, callback) {
         UserModel.findOne({_id: params.id}, function (err, User) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting User',
                     error: err
-                });
+                }, null);
             } else {
                 if (!User) {
-                    callback(404, {
+                    callback({
+                        code: 404,
                         message: 'No such User'
-                    });
+                    }, null);
                 } else {
                     User.Nome = params.modifiedObj.Nome ? params.modifiedObj.Nome : User.Nome;
         			User.Cognome = params.modifiedObj.Cognome ? params.modifiedObj.Cognome : User.Cognome;
@@ -85,12 +91,13 @@ module.exports = {
         			
                     User.save(function (err, User) {
                         if (err) {
-                            callback(500, {
+                            callback({
+                                code: 500,
                                 message: 'Error when updating User.',
                                 error: err
-                            });
+                            }, null);
                         } else {
-                            callback(200, User);
+                            callback(0, User); //200
                         }
                     });
                 }
@@ -104,12 +111,13 @@ module.exports = {
     remove: function (params, callback) {
         UserModel.findByIdAndRemove(params.id, function (err, User) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when deleting the User.',
                     error: err
-                });
+                }, null);
             } else {
-                callback(204, null);
+                callback(0, null); //204
             }
         });
     }

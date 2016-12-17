@@ -15,7 +15,7 @@ module.exports = {
             if (err) {
                 callback(err, null);
             } else {
-                callback(0, Relations);
+                callback(0, Relations); //200
             }
         });
     },
@@ -26,12 +26,13 @@ module.exports = {
     list: function (callback) {
         RelationModel.find(function (err, Relations) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting Relation.',
                     error: err
-                });
+                }, null);
             } else {
-                callback(200, Relations);
+                callback(0, Relations); //200
             }
         });
     },
@@ -42,17 +43,19 @@ module.exports = {
     show: function (params, callback) {
         RelationModel.findOne({_id: params.id}, function (err, Relation) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting Relation.',
                     error: err
-                });
+                }, null);
             } else {
                 if (!Relation) {
-                    callback(404, {
+                    callback({
+                        code: 404,
                         message: 'No such Relation'
-                    });
+                    }, null);
                 } else {
-                    callback(200, Relation);
+                    callback(0, Relation); //200
                 }
             }
         });
@@ -65,12 +68,13 @@ module.exports = {
         var Relation = new RelationModel(params.newObj);
         Relation.save(function (err, Relation) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when creating Relation',
                     error: err
-                });
+                }, null);
             } else {
-                callback(201, Relation);
+                callback(0, Relation); //201
             }
             
         });
@@ -82,15 +86,17 @@ module.exports = {
     update: function (params, callback) {
         RelationModel.findOne({_id: params.id}, function (err, Relation) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting Relation',
                     error: err
-                });
+                }, null);
             } else {
                 if (!Relation) {
-                    callback(404, {
+                    callback({
+                        code: 404,
                         message: 'No such Relation'
-                    });
+                    }, null);
                 } else {
 
                     Relation.Name = params.modifiedObj.Name ? params.modifiedObj.Name : Relation.Name;
@@ -98,12 +104,13 @@ module.exports = {
                     
                     Relation.save(function (err, Relation) {
                         if (err) {
-                            callback(500, {
+                            callback({
+                                code: 500,
                                 message: 'Error when updating Relation.',
                                 error: err
-                            });
+                            }, null);
                         } else {
-                            callback(200, Relation);
+                            callback(0, Relation); //200
                         }
                     });
                 }
@@ -118,12 +125,13 @@ module.exports = {
     remove: function (params, callback) {
         RelationModel.findByIdAndRemove(params.id, function (err, Relation) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when deleting the Relation.',
                     error: err
-                });
+                }, null);
             } else {
-                callback(204, null);
+                callback(0, null); //204
             }
         });
     },
@@ -131,12 +139,13 @@ module.exports = {
     findRelationByName : function(params, callback){
         RelationModel.find({'Name': params.name }, function (err, relation) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting Relation.',
                     error: err
-                });
+                }, null);
             } else {
-                callback(200, relation);
+                callback(0, relation); //200
             }
         });
 
@@ -145,12 +154,13 @@ module.exports = {
     findRelationByRepresentativePhrase : function(params, callback){
         RelationModel.find({'RepresentativePhrase': params.representativePhrase }, function (err, relation) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting Relation.',
                     error: err
-                });
+                }, null);
             } else {
-                callback(200, relation);
+                callback(0, relation); //200
             }
         });
     },
