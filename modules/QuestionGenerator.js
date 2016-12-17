@@ -1,25 +1,14 @@
-var mongoose = require('mongoose');
-
-var RelationModel = require('../models/RelationModel.js');
-var QuestionModel = require('../models/QuestionModel.js');
-
-var RelationFacade = require('../facade/RelationFacade.js');
+var RelationFacade = require('../facades/RelationFacade.js');
 
 
 module.exports = {
-    generateQuestion : function(phrase, representativePhrase, callback) {
-        RelationFacade.findRelationByRepresentativePhrase(representativePhrase, function (relation) {
-            if(relation) {
-                var subjectType = relation.SubjectType;
-                var objectType = relation.ObjectType;
-                var firstMember = "<" + subjectType + "> " + representativePhrase + " <" + objectType + ">";
-                var secondMember = "<" + subjectType + "> " + phrase + " <" + objectType + ">";
-                var question = "Does \"" + firstMember + "\" mean that \"" + secondMember + "\"?";
-
-                callback(question)
-            }
-            else
-                return console.log("Relation Not Exist!")
-        });
+    generateQuestion : function(phrase, relation, callback) {
+        /*phrase and relation not null*/
+        var subjectType = relation.SubjectType;
+        var objectType = relation.ObjectType;
+        var firstMember = "<" + subjectType + "> " + relation.RepresentativePhrase + " <" + objectType + ">";
+        var secondMember = "<" + subjectType + "> " + phrase.Phrase + " <" + objectType + ">";
+        var question = "Does \"" + firstMember + "\" mean that \"" + secondMember + "\"?";
+        callback(question);
     }
-}
+};
