@@ -26,7 +26,9 @@ module.exports = {
     create: function (req, res) {
         var params = { newObj : {
 				Name : req.body.Name,
-				RepresentativePhrase : req.body.RepresentativePhrase
+				RepresentativePhrase : req.body.RepresentativePhrase,
+                ObjectType : req.body.ObjectType,
+                SubjectType : req.body.SubjectType
             }
         };
 
@@ -44,7 +46,9 @@ module.exports = {
             id: req.params.id,
             modifiedObj: {
                 RepresentativePhrase: req.body.RepresentativePhrase,
-                Name: req.body.Name
+                Name: req.body.Name,
+                ObjectType : req.body.ObjectType,
+                SubjectType : req.body.SubjectType
             }
         };
         RelationFacade.update(params, function(err, response){

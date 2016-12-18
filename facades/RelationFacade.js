@@ -105,7 +105,9 @@ module.exports = {
 
                     Relation.Name = params.modifiedObj.Name ? params.modifiedObj.Name : Relation.Name;
                     Relation.RepresentativePhrase = params.modifiedObj.RepresentativePhrase ? params.modifiedObj.RepresentativePhrase : Relation.RepresentativePhrase;
-                    
+                    Relation.ObjectType = params.modifiedObj.ObjectType ? params.modifiedObj.ObjectType : Relation.ObjectType;
+                    Relation.SubjectType = params.modifiedObj.SubjectType ? params.modifiedObj.SubjectType : Relation.SubjectType;
+
                     Relation.save(function (err, Relation) {
                         if (err) {
                             callback({
