@@ -1,0 +1,12 @@
+people.person.ethnicity	who is of
+people.person.nationality	is a
+people.person.parents	is the son of
+people.person.place_of_birth	is born in
+people.person.religion	is a devout
+people.person.spouse_s..people.marriage.spouse	is married to
+sports.pro_athlete.teams..sports.sports_team_roster.team	signed with
+government.politician.party..government.political_party_tenure.party	is a politician for the
+award.award_winner.awards_won..award.award_honor.award	received the
+people.person.children	is the parent of
+people.person.education..education.education.institution	graduated from
+people.deceased_person.place_of_death	died in
