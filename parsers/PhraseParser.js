@@ -3,6 +3,7 @@
  */
 
 var stream = require('linestream');
+var BaseParser = require("./BaseParser");
 
 var stage_one = function (file, relations, cb){
     var line = stream.create(file, {bufferSize: 300})
@@ -12,11 +13,13 @@ var stage_one = function (file, relations, cb){
     line.on('data', function(line, isEnd) {
         var elements = line.split("\t");
 
-        if (typeof relations[elements[0].trim()] != "undefined" &&
-            relations[elements[0].trim()].RepresentativePhrase != elements[1].trim()){
+        var name = BaseParser.simplify_name(elements[0]);
+
+        if (typeof relations[name] != "undefined" &&
+            relations[name].RepresentativePhrase != elements[1].trim()){
             phrases.push({
-                Relation: relations[elements[0]]._id,
-                RelationName: relations[elements[0]].Name,
+                Relation: relations[name]._id,
+                RelationName: name,
                 Phrase: elements[1].trim(),
                 Score: parseFloat(elements[3])
             })
