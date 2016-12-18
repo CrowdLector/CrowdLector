@@ -6,8 +6,9 @@ Used tecnologies:
 - Node.js + express
 - MongoDB + Mongoose
 
-## Populate database
-To populate the database run "node init.js" once. It requires MongoDB running, so run the "start_mongo_service" bat or sh file before.
+## Initialization
+- Run "npm install"
+- To populate the database run "node init.js" once. It requires MongoDB running, so run the "start_mongo_service" bat or sh file before.
 
 ## Instructions
 Run the bat or sh files depending on your OS, then go to http://localhost:3000.
