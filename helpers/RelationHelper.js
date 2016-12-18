@@ -1,4 +1,4 @@
-var RelationFacade = require('../facades/RelationFacade.js');
+var RelationFacade = require('../facades/RelationFacade');
 
 module.exports = {
 	

@@ -1,6 +1,5 @@
-var RelationFacade = require('../facade/RelationFacade.js');
-var PhraseFacade = require('../facade/PhraseFacade.js');
-var UsersFacade = require('../facade/UsersFacade.js');
+var RelationFacade = require('../facades/RelationFacade');
+var PhraseFacade = require('../facades/PhraseFacade');
 
 /**
  * selectQuestions(userId, page, resultsPerPage, callback)
@@ -33,7 +32,7 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                         hasConsensus(phrase.Answers, function(phraseHasConsensus){
                             // debug
                             /*
-                            console.log('Answers: ' + phrase.Answers + ' outcome: '  + outcome + ' user id index: ' + 
+                            console.log('Answers: ' + phrase.Answers + ' phraseHasConsensus: '  + phraseHasConsensus + ' user id index: ' + 
                             phrase.Users.indexOf(userId) + ' utenti per frase: ' + phrase.Users +
                             ' user id ' + userId); 
                             */

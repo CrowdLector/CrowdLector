@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var mongoose = require('mongoose');
+// mongoose's Promise library is deprecated, using bluebird 
+mongoose.Promise = require('bluebird');
 mongoose.connect('mongodb://localhost/CrowdLector');
 
 var index = require('./routes/index');

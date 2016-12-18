@@ -1,4 +1,4 @@
-var PhraseFacade = require('../facades/PhraseFacade.js');
+var PhraseFacade = require('../facades/PhraseFacade');
 
 module.exports = {
 
