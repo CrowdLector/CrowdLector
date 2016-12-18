@@ -67,14 +67,18 @@ function hasConsensus(answers, callback) {
     });
 }
 
-module.export = {
-    selectQuestions: function (userId, callback) { selectQuestions(userId, 1, 1, callback); },
-    selectQuestionsBuffered: function (userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, callback); }
-}
-
 
 
 // test
+
+function pagedListErr(page, resultsPerPage, callback) {
+    // supposed 2 results
+    callback({ 
+                code: 500,
+                message: 'Error when getting Relation.',
+                //error: err
+            }, null);
+}
 
 function pagedList(page, resultsPerPage, callback) {
     // supposed 2 results
@@ -128,4 +132,4 @@ function listByRelationName(relationName, callback) {
 }
 
 //hasConsensus([0], function(outcome){ console.log(outcome) });
-selectQuestions(2, 1, 2, function (err, phrases) { console.log(phrases) });
+selectQuestions(2, 1, 2, function (err, phrases) { if(err) console.log(err.message); else console.log(phrases) });

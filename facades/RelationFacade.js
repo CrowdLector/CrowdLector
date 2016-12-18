@@ -13,7 +13,11 @@ module.exports = {
     pagedList: function (page, resultsPerPage, callback) {
         RelationModel.find().sort({Name: -1}).skip((page-1)*resultsPerPage).limit(resultsPerPage).exec(function (err, Relations) {
             if (err) {
-                callback(err, null);
+                callback({
+                    code: 500,
+                    message: 'Error when getting Relation.',
+                    error: err
+                }, null);
             } else {
                 callback(0, Relations); //200
             }
