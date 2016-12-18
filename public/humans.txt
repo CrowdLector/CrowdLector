@@ -3,13 +3,19 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
+	Lorenzo Ariemma -- Data Base Developer -- 
+    Gaetano Bonofiglio -- Front End Developer -- 
+	Marco Cappello -- Data Base Developer -- 
+	Matteo Filippi -- Data Base Developer -- 
+	Veronica Iovinella -- Back End Developer -- 
+	Miriana Mancini -- Back End Developer -- 
+	Nicola Sardella -- Back End Developer -- 
 
 # THANKS
 
-    <name>
+    Matteo Cannaviccio
 
 # TECHNOLOGY COLOPHON
 
-    CSS3, HTML5
-    Apache Server Configs, jQuery, Modernizr, Normalize.css
+    CSS3, HTML5, NODE.JS, MONGODB, EXPRESS.JS, JADE
+    jQuery, Modernizr, Normalize.css, Bootstrap

@@ -82,5 +82,6 @@ function hasConsensus(answers, callback) {
 
 module.export = {
     selectQuestionsForUser: function(userId, callback) { selectQuestions(userId, 1, 1, callback); },
-    selectQuestionsForUserBuffered: function(userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, callback); }
+    selectQuestionsForUserBuffered: function(userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, callback); },
+    hasConsensus: function(phrase, callback){hasConsensus(phrase.Answers, callback);}
 }

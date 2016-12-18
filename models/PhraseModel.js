@@ -8,6 +8,7 @@ var PhraseSchema = new Schema({
 	},
 	'RelationName' : String, // redundant for find without join
 	'Phrase' : String,
+	'Score' : Number,
 	'Answers' : [Boolean],
 	'Users' : [Schema.Types.ObjectId]
 });

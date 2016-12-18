@@ -3,22 +3,22 @@ var PhraseFacade = require('../facades/PhraseFacade.js');
 module.exports = {
 
     list: function (req, res) {
-        PhraseFacade.list(function(code, response){
-            if(code==200){
+        PhraseFacade.list(function(err, response){
+            if(err){
                 return res.json(response);
             } else {
-                return res.status(code).json(response);
+                return res.status(err.code).json(err.message);
             }
         })
     },
 
     show: function (req, res) {
         var params = {id: req.params.id};
-        PhraseFacade.show(params, function(code, response){
-            if(code==200){
+        PhraseFacade.show(params, function(err, response){
+            if(err){
                 return res.json(response);
             } else {
-                return res.status(code).json(response);
+                return res.status(err.code).json(err.message);
             }
         })
     },
@@ -27,16 +27,17 @@ module.exports = {
         var params = { newObj : {
                 Relation : req.body.Relation,
                 Phrase : req.body.Phrase,
+                Score : req.body.Score,
                 Anwser : req.body.Anwser,
                 Utenti : req.body.Utenti
             }
         };
 
-        PhraseFacade.create(params, function(code, response){
-            if(code==201){
+        PhraseFacade.create(params, function(err, response){
+            if(err){
                 return res.json(response);
             } else {
-                return res.status(code).json(response);
+                return res.status(err.code).json(err.message);
             }
         })
     },
@@ -47,26 +48,27 @@ module.exports = {
             modifiedObj: {
                 Relation: req.body.Relation,
                 Phrase: req.body.Phrase,
+                Score : req.body.Score,
                 Anwser: req.body.Anwser,
                 Users: req.body.Utenti
             }
         };
-        PhraseFacade.update(params, function(code, response){
-            if(code==200){
+        PhraseFacade.update(params, function(err, response){
+            if(err){
                 return res.json(response);
             } else {
-                return res.status(code).json(response);
+                return res.status(err.code).json(err.message);
             }
         })
     },
 
     remove: function (req, res) {
         var params = {id: req.params.id};
-        PhraseFacade.update(params, function(code, response){
-            if(code==204){
+        PhraseFacade.update(params, function(err, response){
+            if(err){
                 return res.json(response);
             } else {
-                return res.status(code).json(response);
+                return res.status(err.code).json(err.message);
             }
         })
     }
