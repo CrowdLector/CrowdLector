@@ -1,4 +1,4 @@
-var QuestionGenerator = require('../modules/QuestionGenerator.js');
+var QuestionGenerator = require('../modules/QuestionGenerator');
 
 var relation_test = {
     'Name' : 'place_of_birth',
