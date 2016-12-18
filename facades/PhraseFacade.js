@@ -13,7 +13,11 @@ module.exports = {
     listByRelationName: function (relationName, callback) {
         PhraseModel.find({'RelationName': relationName}).populate('Users').exec(function (err, Phrases) {
             if (err) {
-                callback(err, null);
+                callback({
+                    code: 500,
+                    message: 'Error when getting Phrase.',
+                    error: err
+                }, null);
             } else {
                 callback(0, Phrases); //200
             }

@@ -36,6 +36,8 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                             // If this is the last iteration of both loops then recursively call selectQuestions on next page
                             if (i == phrasesRef.length - 1 && index == relationsRef.length - 1 && phrasesForUser.length == 0)
                                 selectQuestions(userId, ++page, resultsPerPage, callback);
+                                relationsRef = []; // reset array to free space
+                                phrasesRef = []; // reset array to free space
                             return false;
                         })
                         // else continue looping on phrases
@@ -67,14 +69,18 @@ function hasConsensus(answers, callback) {
     });
 }
 
-module.export = {
-    selectQuestions: function (userId, callback) { selectQuestions(userId, 1, 1, callback); },
-    selectQuestionsBuffered: function (userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, callback); }
-}
-
 
 
 // test
+
+function pagedListErr(page, resultsPerPage, callback) {
+    // supposed 2 results
+    callback({ 
+                code: 500,
+                message: 'Error when getting Relation.',
+                //error: err
+            }, null);
+}
 
 function pagedList(page, resultsPerPage, callback) {
     // supposed 2 results
@@ -106,8 +112,8 @@ function listByRelationName(relationName, callback) {
             {
                 'RelationName': 'Spouse', // redundant for find without join
                 'Phrase': 'has married',
-                'Answers': [0, 1],
-                'Users': [1, 2]
+                'Answers': [0, 0],
+                'Users': [1, 3]
             }
         ]);
     else
@@ -115,7 +121,7 @@ function listByRelationName(relationName, callback) {
             {
                 'RelationName': 'Spouse2',
                 'Phrase': 'met2',
-                'Answers': [0, 0],
+                'Answers': [0, 1],
                 'Users': [1, 3]
             },
         {
@@ -128,4 +134,4 @@ function listByRelationName(relationName, callback) {
 }
 
 //hasConsensus([0], function(outcome){ console.log(outcome) });
-selectQuestions(2, 1, 2, function (err, phrases) { console.log(phrases) });
+selectQuestions(2, 1, 2, function (err, phrases) { if(err) console.log(err.message); else console.log(phrases) });
