@@ -1,8 +1,16 @@
 // test
 
+var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+mongoose.connect('mongodb://localhost/CrowdLector');
+
+var RelationFacade = require('../facades/RelationFacade');
+var PhraseFacade = require('../facades/PhraseFacade');
+
 function selectQuestions(userId, page, resultsPerPage, callback) {
     // takes a paged list of Relations
-    /*RelationFacade.*/pagedList(page, resultsPerPage, function (err, relations) {
+    console.log("calling RelationFacade.pagedList");
+    RelationFacade.pagedList(page, resultsPerPage, function (err, relations) {
         if (err) {
             // If there are no relations left ends the stack of recursion with an error.
             // This means that no phrases are left for that user to evaluate.
@@ -14,16 +22,17 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                 // Phrases to show will be stored in this array, reinitialized for each Relation.
                 var phrasesForUser = [];
                 // Gets all the phrases by Relation.Name.
-                /*PhraseFacade.*/listByRelationName(relation.Name, function (err, phrases) {
+                console.log("calling PhraseFacade.listByRelationName");
+                PhraseFacade.listByRelationName(relation.Name, function (err, phrases) {
                     // For each Phrase checks if it has consensus and if the given user has already evalued it.
                     phrases.every(function (phrase, i, phrasesRef) {
                         hasConsensus(phrase.Answers, function (phraseHasConsensus) {
                             // debug
-                            /*
-                            console.log('Answers: ' + phrase.Answers + ' outcome: '  + outcome + ' user id index: ' + 
+                            
+                            console.log('Answers: ' + phrase.Answers + ' phraseHasConsensus: '  + phraseHasConsensus + ' user id index: ' + 
                             phrase.Users.indexOf(userId) + ' utenti per frase: ' + phrase.Users +
                             ' user id ' + userId); 
-                            */
+                            
                             // If user has not evalued it AND Phrase doesn't have consensus, adds it to phrasesForUser
                             if (phrase.Users.indexOf(userId) == -1 && !phraseHasConsensus)
                                 phrasesForUser.push(phrase);
