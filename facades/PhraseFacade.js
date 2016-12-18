@@ -7,6 +7,23 @@ var PhraseModel = require('../models/PhraseModel.js');
  */
 module.exports = {
 
+        /**
+     * PhraseFacade.pagedList()
+     */
+    pagedList: function (page, resultsPerPage, callback) {
+        PhraseModel.find().sort({RelationName: -1}).skip((page-1)*resultsPerPage).limit(resultsPerPage).exec(function (err, Phrases) {
+            if (err) {
+                callback({
+                    code: 500,
+                    message: 'Error when getting Relation.',
+                    error: err
+                }, null);
+            } else {
+                callback(0, Phrases); //200
+            }
+        });
+    },
+
      /**
      * PhraseFacade.listByRelationName()
      */
