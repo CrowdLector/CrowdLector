@@ -82,6 +82,8 @@ module.exports =  {
                 if (!status)
                     return cb(false)
 
+                console.log("Relations loaded", rs.length)
+
                 RelationModel.collection.insert(rs, function(err, list) {
                     if (err) return cb(false);
                     else return cb(true, simplify_access(list.ops));

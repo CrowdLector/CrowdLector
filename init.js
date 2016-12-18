@@ -15,7 +15,7 @@ db.once('open', function() {
 
     RelationParser.createRelations("./input/phrases_representative.tsv", "./input/relations_schema.tsv",function (status, rs) {
         PhraseParser.createPhrases("./input/phrases_refactor.tsv", rs, function (status, phrases){
-            console.log("loaded");
+            console.log("load complete");
             process.exit();
 
         })

@@ -41,6 +41,9 @@ module.exports =  {
         var PhraseModel = require("../models/PhraseModel");
 
         stage_one(file_phrases_refactor, relations, function (status, phrases) {
+
+            console.log("Phrases loaded", phrases.length);
+
             PhraseModel.collection.insert(phrases, function(err, list) {
                 if (err) return cb(false);
                 else return cb(true,list.ops);
