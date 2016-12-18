@@ -5,8 +5,9 @@ function generateQuestion(phrase, relation, callback) {
     //phrase and relation not null
     var subjectType = relation.SubjectType;
     var objectType = relation.ObjectType;
-    var firstMember = "<" + subjectType + "> " + relation.RepresentativePhrase + " <" + objectType + ">";
-    var secondMember = "<" + subjectType + "> " + phrase.Phrase + " <" + objectType + ">";
+    var firstMember = "<" + subjectType + "> " + phrase.Phrase + " <" + objectType + ">";
+    var secondMember = "<" + subjectType + "> " + relation.RepresentativePhrase + " <" + objectType + ">";
+    
     var question = "Does \"" + firstMember + "\" mean that \"" + secondMember + "\"?";
     callback(question);
 }
