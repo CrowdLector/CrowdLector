@@ -13,9 +13,11 @@ var stage_two = function (file, cb){
     line.on('data', function(line, isEnd) {
         var elements = line.split("\t");
 
-        if (typeof relations[elements[0]] != "undefined"){
-            relations[elements[0]].SubjectType = BaseParser.simplify_name(elements[1]);
-            relations[elements[0]].ObjectType = BaseParser.simplify_name(elements[2])
+        var name = BaseParser.simplify_name(elements[0]);
+
+        if (typeof relations[name] != "undefined"){
+            relations[name].SubjectType = BaseParser.simplify_name(elements[1]);
+            relations[name].ObjectType = BaseParser.simplify_name(elements[2])
         }
     })
 
@@ -40,8 +42,7 @@ var stage_one = function (file, cb){
 
     line.on('data', function(line, isEnd) {
         var elements = line.split("\t");
-
-        var name = BaseParser.simplify_name(elements[0])
+        var name = BaseParser.simplify_name(elements[0]);
 
         relations[name] = {
             RepresentativePhrase: elements[1].trim(),
