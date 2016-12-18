@@ -28,7 +28,7 @@ var listPhrase_test = [
     }
 ];
 
-
+console.log('*** TEST ***');
 console.log('Test1: All is ok');
 QuestionGenerator.generateQuestions(listPhrase_test, relation_test, function(err, data){
     if(err){
