@@ -3,22 +3,22 @@ var RelationFacade = require('../facades/RelationFacade.js');
 module.exports = {
 	
 	list: function (req, res) {
-        RelationFacade.list(function(code, response){
-            if(code==200){
+        RelationFacade.list(function(err, response){
+            if(err){
                 return res.json(response);
             } else {
-                return res.status(code).json(response);
+                return res.status(err.code).json(err.message);
             }
         })
     },
 
     show: function (req, res) {
         var params = {id: req.params.id};
-        RelationFacade.show(params, function(code, response){
-            if(code==200){
+        RelationFacade.show(params, function(err, response){
+            if(err){
                 return res.json(response);
             } else {
-                return res.status(code).json(response);
+                return res.status(err.code).json(err.message);
             }
         })
     },
@@ -30,11 +30,11 @@ module.exports = {
             }
         };
 
-        RelationFacade.create(params, function(code, response){
-            if(code==201){
+        RelationFacade.create(params, function(err, response){
+            if(err){
                 return res.json(response);
             } else {
-                return res.status(code).json(response);
+                return res.status(err.code).json(err.message);
             }
         })
     },
@@ -47,22 +47,22 @@ module.exports = {
                 Name: req.body.Name
             }
         };
-        RelationFacade.update(params, function(code, response){
-            if(code==200){
+        RelationFacade.update(params, function(err, response){
+            if(err){
                 return res.json(response);
             } else {
-                return res.status(code).json(response);
+                return res.status(err.code).json(err.message);
             }
         })
     },
 
     remove: function (req, res) {
         var params = {id: req.params.id};
-        RelationFacade.update(params, function(code, response){
-            if(code==204){
+        RelationFacade.update(params, function(err, response){
+            if(err){
                 return res.json(response);
             } else {
-                return res.status(code).json(response);
+                return res.status(err.code).json(err.message);
             }
         })
     }

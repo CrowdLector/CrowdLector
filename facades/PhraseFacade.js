@@ -15,7 +15,7 @@ module.exports = {
             if (err) {
                 callback(err, null);
             } else {
-                callback(0, Phrases);
+                callback(0, Phrases); //200
             }
         });
     },
@@ -26,12 +26,13 @@ module.exports = {
     list: function (callback) {
         PhraseModel.find(function (err, Phrases) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting Phrase.',
                     error: err
-                });
+                }, null);
             } else {
-                callback(200, Phrases);
+                callback(0, Phrases); //200
             }
         });
     },
@@ -42,19 +43,21 @@ module.exports = {
     show: function (params, callback) {
         PhraseModel.findOne({_id: params.id}, function (err, Phrase) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting Phrase.',
                     error: err
-                });
+                }, null);
             }
             else
             {
                 if (!Phrase) {
-                    callback(404, {
+                    callback({
+                        code: 404,
                         message: 'No such Phrase'
-                    });
+                    }, null);
                 } else {
-                    callback(200, Phrase);
+                    callback(0, Phrase); //200
                 }
             }
         });
@@ -68,12 +71,13 @@ module.exports = {
 
         Phrase.save(function (err, Phrase) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when creating Phrase',
                     error: err
-                });
+                }, null);
             } else {
-                callback(201, Phrase);
+                callback(0, Phrase); //201
             }
         });
     },
@@ -84,29 +88,33 @@ module.exports = {
     update: function (params, callback) {
         PhraseModel.findOne({_id: params.id}, function (err, Phrase) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when getting Phrase',
                     error: err
-                });
+                }, null);
             } else {
                 if (!Phrase) {
-                    callback(404, {
+                    callback({
+                        code: 404,
                         message: 'No such Phrase'
-                    });
+                    }, null);
                 } else {
                     Phrase.Relation = params.modifiedObj.Relation ? params.modifiedObj.Relation : Phrase.Relation;
                     Phrase.Phrase = params.modifiedObj.Phrase ? params.modifiedObj.Phrase : Phrase.Phrase;
+                    Phrase.Score = params.modifiedObj.Score ? params.modifiedObj.Score: Phrase.Score;
                     Phrase.Anwser = params.modifiedObj.Anwser ? params.modifiedObj.Anwser : Phrase.Anwser;
                     Phrase.Users = params.modifiedObj.Users ? params.modifiedObj.Users : Phrase.Users;
 
                     Phrase.save(function (err, Phrase) {
                         if (err) {
-                            callback(500, {
+                            callback({
+                                code: 500,
                                 message: 'Error when updating Phrase.',
                                 error: err
-                            });
+                            }, null);
                         } else {
-                            callback(200, Phrase);
+                            callback(0, Phrase); //200
                         }
                     });
                 }
@@ -120,12 +128,13 @@ module.exports = {
     remove: function (params, callback) {
         PhraseModel.findByIdAndRemove(params.id, function (err, Phrase) {
             if (err) {
-                callback(500, {
+                callback({
+                    code: 500,
                     message: 'Error when deleting the Phrase.',
                     error: err
-                });
+                }, null);
             } else {
-                callback(204, null);
+                callback(0, null); //204
             }
         });
     }
