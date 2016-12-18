@@ -8,7 +8,7 @@ var BaseParser = require("./BaseParser");
 var stage_one = function (file, relations, cb){
     var line = stream.create(file, {bufferSize: 300})
 
-    phrases = [];
+    var phrases = [];
 
     line.on('data', function(line, isEnd) {
         var elements = line.split("\t");
