@@ -15,8 +15,13 @@ var stage_one = function (file, relations, cb){
 
         var name = BaseParser.simplify_name(elements[0]);
 
-        if (typeof relations[name] != "undefined" &&
-            relations[name].RepresentativePhrase != elements[1].trim()){
+        if (typeof relations[name] != "undefined"){
+
+            if (typeof relations[name].count == "undefined")
+                relations[name].count = 0;
+
+            relations[name].count += 1;
+
             phrases.push({
                 Relation: relations[name]._id,
                 RelationName: name,
@@ -27,6 +32,11 @@ var stage_one = function (file, relations, cb){
     })
 
     line.on('end', function() { // emitted at the end of file
+
+        Object.keys(relations).forEach(function (e) {
+            console.log("Relation", relations[e].Name, "has",  relations[e].count, "phrases")
+        })
+
         cb(true, phrases);
     });
 
