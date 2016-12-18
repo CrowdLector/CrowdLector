@@ -48,8 +48,9 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                             }
                             // If this is the last iteration of both loops then recursively call selectQuestions on next page
                             if(i == phrasesRef.length - 1 && index == relationsRef.length - 1 && phrasesForUser.length == 0)
-                                relationsRef = []; // reset array to free space
                                 selectQuestions(userId, ++page, resultsPerPage, callback);
+                                relationsRef = []; // reset array to free space
+                                phrasesRef = []; // reset array to free space
                                 return false;
                             })
                             // else continue looping on phrases
