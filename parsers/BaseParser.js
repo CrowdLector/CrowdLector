@@ -3,9 +3,9 @@
  */
 
 
-module.exports =  {
-    simplify_name: function (name){
+module.exports = {
+    simplify_name: function (name) {
         var parts = name.trim().split(".");
-        return parts[parts.length - 1]
+        return parts[parts.length - 1];
     }
-}
+};

@@ -7,8 +7,11 @@ var PhraseModel = require('../models/PhraseModel.js');
  */
 module.exports = {
 
-        /**
+    /**
      * PhraseFacade.pagedList()
+     * @param {number} page Number of the page to retreive
+     * @param {number} resultsPerPage Number of items per page
+     * @param {function} callback Function with two parameters, err and data
      */
     pagedList: function (page, resultsPerPage, callback) {
         PhraseModel.find().sort({RelationName: -1}).skip((page-1)*resultsPerPage).limit(resultsPerPage).exec(function (err, Phrases) {
@@ -26,6 +29,8 @@ module.exports = {
 
      /**
      * PhraseFacade.listByRelationName()
+     * @param {string} relationName Name of the relation to be retreived
+     * @param {function} callback Function with two parameters, err and data
      */
     listByRelationName: function (relationName, callback) {
         PhraseModel.find({'RelationName': relationName}).populate('Users').exec(function (err, Phrases) {
@@ -43,6 +48,7 @@ module.exports = {
 
     /**
      * PhraseFacade.list()
+     * @param {function} callback Function with two parameters, err and data
      */
     list: function (callback) {
         PhraseModel.find(function (err, Phrases) {
@@ -60,6 +66,8 @@ module.exports = {
 
     /**
      * PhraseFacade.show()
+     * @param {object} params Object to store parameters of the function 
+     * @param {function} callback Function with two parameters, err and data
      */
     show: function (params, callback) {
         PhraseModel.findOne({_id: params.id}, function (err, Phrase) {
@@ -86,6 +94,8 @@ module.exports = {
 
     /**
      * PhraseFacade.create()
+     * @param {json} params object with data
+     * @param {function} callback Function with two parameters, err and data
      */
     create: function (params, callback) {
         var Phrase = new PhraseModel( params.newObj );
@@ -105,6 +115,8 @@ module.exports = {
 
     /**
      * PhraseFacade.update()
+     * @param {json} params object with data
+     * @param {function} callback Function with two parameters, err and data
      */
     update: function (params, callback) {
         PhraseModel.findOne({_id: params.id}, function (err, Phrase) {
@@ -145,6 +157,8 @@ module.exports = {
 
     /**
      * PhraseFacade.remove()
+     * @param {json} params object with data
+     * @param {function} callback Function with two parameters, err and data
      */
     remove: function (params, callback) {
         PhraseModel.findByIdAndRemove(params.id, function (err, Phrase) {

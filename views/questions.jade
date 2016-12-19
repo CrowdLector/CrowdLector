@@ -2,7 +2,7 @@ extends header
 
 block form
   hr
-  form.form-group(method="POST", target="answers")
+  form.form-group(method="POST", target="answers", action="saveAnswers")
     .bg-info
       .row.padded
         .col-lg-4
@@ -11,7 +11,7 @@ block form
         .col-lg-4
           .radio
             label(for='answer-0yes')
-              input(type='radio', name='answer-0', id='answer-0yes', value="1", checked="checked", required)
+              input(type='radio', name='answer-0', id='answer-0yes', value="1", checked="checked", required, disabled)
               | Yes
             span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             label(for='answer-0no')
@@ -22,16 +22,16 @@ block form
     -for(var index = 1; index < questions.length; index++)
       .row.padded
         .col-lg-4
-          label #{index}) #{questions[index]}
+          label #{index}) #{questions[index].question}
       .row.padded
         .col-lg-4
           .radio
             label(for='answer-#{index}yes')
-              input(type='radio', name='answer-#{index}', id='answer-#{index}yes', value="1", required)
+              input(type='radio', name='#{questions[index]._id}', id='answer-#{index}yes', value="1", required)
               | Yes
             span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             label(for='answer-#{index}no')
-              input(type='radio', name='answer-#{index}', id='answer-#{index}no', value="0", required)
+              input(type='radio', name='#{questions[index]._id}', id='answer-#{index}no', value="0", required)
               | No
       hr
     br

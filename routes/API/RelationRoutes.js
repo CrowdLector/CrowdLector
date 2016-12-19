@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var RelationHelper = require('../helpers/RelationHelper.js');
+var RelationHelper = require('../helpers/API/RelationHelper.js');
 
 /*
  * GET

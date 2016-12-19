@@ -7,11 +7,11 @@ block form
         label(for="email") Please enter your email address and your full name
     .row
       .col-lg-4.padded
-        input.form-control(type="email", id="email", name="email", placeholder="your email address", pattern="[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})", required)
+        input.form-control(type="email", id="email", name="email", placeholder="Your email address", pattern="[A-Za-z0-9._-]*@[a-zA-Z]*[.]([a-zA-Z]{2,}|[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})", required)
     .row
       .col-lg-2.padded
-        input.form-control(type="text", id="name", name="name", placeholder="name")
+        input.form-control(type="text", id="name", name="name", placeholder="Name")
       .col-lg-2.padded
-        input.form-control(type="text", id="surname", name="surname", placeholder="surname")
+        input.form-control(type="text", id="surname", name="surname", placeholder="Surname")
       .col-lg-1.padded
         input.btn.btn-primary.form-control(type="Submit", value="Submit", id="submit")

@@ -4,7 +4,7 @@ var Schema   = mongoose.Schema;
 var UserSchema = new Schema({
 	'Nome' : {type: String, required: false},
 	'Cognome' : {type: String, required: false},
-	'Email' : {type: String, required: true},
+	'Email' : {type: String, required: true, unique: true},
 });
 
 module.exports = mongoose.model('User', UserSchema);
