@@ -22,14 +22,14 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
         }
         else {
             // For each Relation obtained check if there are phrases to show.
-            relations.every(function(relation, index, relationsRef){
+            relations.every(function (relation, index, relationsRef) {
                 // Phrases to show will be stored in this array, reinitialized for each Relation.
                 var phrasesForUser = [];
                 // Gets all the phrases by Relation.Name.
-                PhraseFacade.listByRelationName(relation.Name, function(err, phrases){
+                PhraseFacade.listByRelationName(relation.Name, function (err, phrases) {
                     // For each Phrase checks if it has consensus and if the given user has already evalued it.
-                    phrases.every(function(phrase, i, phrasesRef){
-                        hasConsensus(phrase.Answers, function(phraseHasConsensus){
+                    phrases.every(function (phrase, i, phrasesRef) {
+                        hasConsensus(phrase.Answers, function (phraseHasConsensus) {
                             // debug
                             /*
                             console.log('Answers: ' + phrase.Answers + ' phraseHasConsensus: '  + phraseHasConsensus + ' user id index: ' + 
@@ -37,30 +37,30 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                             ' user id ' + userId); 
                             */
                             // If user has not evalued it AND Phrase doesn't have consensus, adds it to phrasesForUser
-                            if(phrase.Users.indexOf(userId) == -1 && !phraseHasConsensus)
+                            if (phrase.Users.indexOf(userId) == -1 && !phraseHasConsensus)
                                 phrasesForUser.push(phrase);
                             // If this is the last iteration of the inner loop and we have results then 
                             // calls the callback and ends the recursion.
-                            if(i == phrasesRef.length - 1 && phrasesForUser.length != 0) {
+                            if (i == phrasesRef.length - 1 && phrasesForUser.length != 0) {
                                 callback(0, phrasesForUser);
                                 return false;
                             }
                             // If this is the last iteration of both loops then recursively call selectQuestions on next page
-                            if(i == phrasesRef.length - 1 && index == relationsRef.length - 1 && phrasesForUser.length == 0)
+                            if (i == phrasesRef.length - 1 && index == relationsRef.length - 1 && phrasesForUser.length == 0)
                                 selectQuestions(userId, ++page, resultsPerPage, callback);
-                                relationsRef = []; // reset array to free space
-                                phrasesRef = []; // reset array to free space
-                                return false;
-                            })
-                            // else continue looping on phrases
-                            return true;
-                    })
+                            relationsRef = []; // reset array to free space
+                            phrasesRef = []; // reset array to free space
+                            return false;
+                        });
+                        // else continue looping on phrases
+                        return true;
+                    });
                 });
                 // If phrasesForUser has obtained stuff from at least 1 phrase then exit the loop on relations
-                if(phrasesForUser.length != 0) return false;
+                if (phrasesForUser.length != 0) return false;
                 // else continue looping on relations
                 else return true;
-            })
+            });
         }
     });
 }  
@@ -82,7 +82,7 @@ function hasConsensus(answers, callback) {
 }
 
 module.export = {
-    selectQuestionsForUser: function(userId, callback) { selectQuestions(userId, 1, 1, callback); },
-    selectQuestionsForUserBuffered: function(userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, callback); },
-    hasConsensus: function(phrase, callback){hasConsensus(phrase.Answers, callback);}
-}
+    selectQuestionsForUser: function (userId, callback) { selectQuestions(userId, 1, 1, callback); },
+    selectQuestionsForUserBuffered: function (userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, callback); },
+    hasConsensus: function (phrase, callback) { hasConsensus(phrase.Answers, callback); }
+};

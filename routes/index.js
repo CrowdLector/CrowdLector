@@ -27,7 +27,12 @@ router.post('/', function (req, res, next) {
                             //TODO aggiungi data._id in sessione
                             res.render('questions', {
                                 title: 'CrowdLector',
-                                questions: ["ciaoone", "pippo", "pluto", "qui, quo, qua"] // TODO: test stuff to avoid error on questions.jade
+                                example: "Sono una domanda di esempio",
+                                questions: [
+                                    { _id: 2, question: "ciaoone" },
+                                    { _id: 6, question: "pippo" },
+                                    { _id: 74, question: "pluto" },
+                                    { _id: 79, question: "qui, quo, qua" }] // TODO: test stuff to avoid error on questions.jade
                             });
                         }
                     });
@@ -40,6 +45,7 @@ router.post('/', function (req, res, next) {
                 //verifica che l'utente sia corretto, aggiungi data._id in sessione
                 res.render('questions', {
                     title: 'CrowdLector',
+                    example: "Sono una domanda di esempio",
                     questions: [
                         { _id: 2, question: "ciaoone" },
                         { _id: 6, question: "pippo" },

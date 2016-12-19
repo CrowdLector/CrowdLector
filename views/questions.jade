@@ -2,16 +2,16 @@ extends header
 
 block form
   hr
-  form.form-group(method="POST", target="answers", action="saveAnswers")
+  form.form-group(method="POST", action="saveAnswers")
     .bg-info
       .row.padded
         .col-lg-4
-          label Example) #{questions[0]}
+          label Example) #{example}
       .row.padded
         .col-lg-4
           .radio
             label(for='answer-0yes')
-              input(type='radio', name='answer-0', id='answer-0yes', value="1", checked="checked", required, disabled)
+              input(type='radio', name='answer-0', id='answer-0yes', value="1", checked="checked", required)
               | Yes
             span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             label(for='answer-0no')
@@ -19,7 +19,7 @@ block form
               | No
             br
     hr
-    -for(var index = 1; index < questions.length; index++)
+    -for(var index = 0; index < questions.length; index++)
       .row.padded
         .col-lg-4
           label #{index}) #{questions[index].question}

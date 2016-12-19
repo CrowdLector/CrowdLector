@@ -33,7 +33,7 @@ module.exports = {
      * @param {function} callback Function with two parameters, err and data
      */
     listByRelationName: function (relationName, callback) {
-        PhraseModel.find({'RelationName': relationName}).populate('Users').exec(function (err, Phrases) {
+        PhraseModel.find({'RelationName': relationName}).populate('Users').sort('Score').exec(function (err, Phrases) {
             if (err) {
                 callback({
                     code: 500,
