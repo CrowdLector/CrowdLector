@@ -1,5 +1,5 @@
-var QuestionGenerator = require("../modules/QuestionGenerator.js");
-var DynamicEngager = require("../modules/DynamicEngager.js");
+var QuestionGenerator = require(__base + "modules/QuestionGenerator");
+var DynamicEngager = require(__base + "modules/DynamicEngager");
 
 var config = require("../config.js");
 
@@ -11,7 +11,7 @@ module.exports = {
                 //TODO Gesire l'errore
             }
             console.log(data);
-            callback();
+            callback(0, null);
         });
     }
 

@@ -1,3 +1,5 @@
+global.__base = __dirname + '/';
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,7 +7,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var config = require("./config.js");
-var session = require('express-session')
+var session = require('express-session');
 
 var mongoose = require('mongoose');
 // mongoose's Promise library is deprecated, using bluebird 
