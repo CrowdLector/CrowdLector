@@ -45,3 +45,5 @@ database/*
 # WebStorm
 .idea
 .vs/
+
+config.js

@@ -9,6 +9,7 @@ Used tecnologies:
 ## Initialization
 - Run "npm install"
 - To populate the database run "node init.js" once. It requires MongoDB running, so run the "start_mongo_service" bat or sh file before.
+- Rename "config.example.js" in "config.js" and change inside data according to your needings
 
 ## Instructions
 Run the bat or sh files depending on your OS, then go to http://localhost:3000.

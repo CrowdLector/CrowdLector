@@ -9,6 +9,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
+    var session = req.session;
 	var user = {
 		Email: req.body.email,
 		Name: req.body.name,
@@ -24,7 +25,7 @@ router.post('/', function (req, res, next) {
                                 message: "Database error"
                             });
                         } else {
-                            //TODO aggiungi data._id in sessione
+                            session.user = data._id;
                             res.render('questions', {
                                 title: 'CrowdLector',
                                 example: "Sono una domanda di esempio",
@@ -42,7 +43,8 @@ router.post('/', function (req, res, next) {
                     });
                 }
             } else {
-                //verifica che l'utente sia corretto, aggiungi data._id in sessione
+                //TODO verifica che l'utente sia corretto
+                session.user = data._id;
                 res.render('questions', {
                     title: 'CrowdLector',
                     example: "Sono una domanda di esempio",
@@ -64,6 +66,7 @@ router.post('/', function (req, res, next) {
 
 router.post('/saveAnswers', function (req, res, next) {
     console.log(req.body);
+    //console.log(req.session);
 });
 
 module.exports = router;
