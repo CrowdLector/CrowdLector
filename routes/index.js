@@ -3,6 +3,8 @@ var router = express.Router();
 var UserHelper = require('../helpers/UserHelper.js');
 var UserFacade = require('../facades/UserFacade.js');
 var QuestionCreator = require('../helpers/QuestionCreator.js');
+var Validator = require('validator');
+var async = require('async');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -32,9 +34,10 @@ router.post('/', function (req, res, next) {
                                     res.render('error', err);
                                 } else {
                                     session.questions = data.ids;
+                                    session.questions.push(1);
                                     res.render('questions', {
                                         title: 'CrowdLector',
-                                        example: "Sono una domanda di esempio",
+                                        example: {_id: 1, question:"Sono una domanda di esempio"},
                                         questions: data.questions
                                     });
                                 }
@@ -54,9 +57,10 @@ router.post('/', function (req, res, next) {
 						res.render('error', err);
                     } else {
                         session.questions = data.ids;
+                        session.questions.push(1);
                         res.render('questions', {
                             title: 'CrowdLector',
-                            example: "Sono una domanda di esempio",
+                            example: {_id: 1, question:"Sono una domanda di esempio"},
                             questions: data.questions
                         });
 					}
@@ -71,17 +75,59 @@ router.post('/', function (req, res, next) {
 
 });
 
-router.post('/saveAnswers', function (req, res, next) {
+router.post('/saveAnswers', function (req, res) {
 	var session = req.session;
-	//Verificare che le domande tornate siano le stesse mandate e persisterle nel db
+
     console.log(req.body);
     console.log("Mi sono salvato in sessione questi id");
     console.log(session.questions);
-    req.body.forEach(function (item) {
-        if (session.item._id)
-    });
 
+    var errors = [];
 
+    var keys = Object.keys(req.body);
+    async.each(keys, function(item, callback){
+        console.log(item);
+        if (session.questions.indexOf(item) > -1){
+            if (Validator.isBoolean(req.body[item])) {
+                //Pusho la risposta nel db,
+				callback();
+            } else {
+                errors.push({
+                    type: "Someone changed the POST to the server, not boolean",
+                    id: item,
+                    answer: req.body[item]
+                });
+                callback();
+            }
+        } else {
+            errors.push({
+                type: "Someone changed the POST to the server, id not correct",
+                id: item,
+                answer: req.body[item]
+            });
+            callback();
+        }
+	}, function(err){
+    	if(err){
+    		console.log("è cascato il mondo");
+		} else {
+    		if(errors.length > 0){
+                console.log("ERRORI:");
+                console.log(errors);
+                res.render('error', {
+                    message: "ERROR",
+                    error: {
+                        status: errors
+                    }
+                });
+			} else {
+    			res.render('message', {
+    				type: "success",
+					message: "You have completed all the questions, GG!"
+				});
+			}
+		}
+	});
 });
 
 module.exports = router;

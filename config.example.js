@@ -1,4 +1,4 @@
 module.exports = {
-    cookieSecret = "VerySecretCookieKey",
-    QuestionsPerPage = 20
+    cookieSecret: "VerySecretCookieKey",
+    QuestionsPerPage: 20
 }

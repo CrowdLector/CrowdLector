@@ -6,16 +6,16 @@ block corpus
     .bg-info
       .row.padded
         .col-lg-4
-          label Example) #{example}
+          label Example) #{example.question}
       .row.padded
         .col-lg-4
           .radio
             label(for='answer-Example-yes')
-              input(type='radio', name='example', id='answer-Example-yes', value="1", checked="checked", required)
+              input(type='radio', name='#{example._id}', id='answer-Example-yes', value="1", checked="checked", required)
               | Yes
             span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             label(for='answer-Example-no')
-              input(type='radio', name='example', id='answer-Example-no', value="0", disabled, required)
+              input(type='radio', name='#{example._id}', id='answer-Example-no', value="0", disabled, required)
               | No
             br
     hr
