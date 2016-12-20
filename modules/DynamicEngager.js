@@ -1,5 +1,7 @@
-var RelationFacade = require('../facades/RelationFacade');
-var PhraseFacade = require('../facades/PhraseFacade');
+var RelationFacade = require(__base + 'facades/RelationFacade');
+var PhraseFacade = require(__base + 'facades/PhraseFacade');
+
+var hasCalled = false;
 
 /**
  * selectQuestions(userId, page, resultsPerPage, callback)
@@ -13,6 +15,7 @@ var PhraseFacade = require('../facades/PhraseFacade');
  * Exported version hides recursion and takes less arguments. See module.export.
  */
 function selectQuestions(userId, page, resultsPerPage, callback) {
+    hasCalled = false;
     // takes a paged list of Relations
     RelationFacade.pagedList(page, resultsPerPage, function (err, relations){
         if(err){
@@ -42,7 +45,10 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                             // If this is the last iteration of the inner loop and we have results then 
                             // calls the callback and ends the recursion.
                             if (i == phrasesRef.length - 1 && phrasesForUser.length != 0) {
-                                callback(0, phrasesForUser);
+                                if (!hasCalled) {
+                                    callback(0, phrasesForUser);
+                                    hasCalled = true;
+                                }
                                 return false;
                             }
                             // If this is the last iteration of both loops then recursively call selectQuestions on next page
@@ -81,7 +87,7 @@ function hasConsensus(answers, callback) {
         });   
 }
 
-module.export = {
+module.exports = {
     selectQuestionsForUser: function (userId, callback) { selectQuestions(userId, 1, 1, callback); },
     selectQuestionsForUserBuffered: function (userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, callback); },
     hasConsensus: function (phrase, callback) { hasConsensus(phrase.Answers, callback); }

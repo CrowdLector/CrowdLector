@@ -7,7 +7,10 @@ mongoose.connect('mongodb://localhost/CrowdLector');
 var RelationFacade = require('../facades/RelationFacade');
 var PhraseFacade = require('../facades/PhraseFacade');
 
+var hasCalled = false;
+
 function selectQuestions(userId, page, resultsPerPage, callback) {
+    hasCalled = false;
     // takes a paged list of Relations
     console.log("calling RelationFacade.pagedList");
     RelationFacade.pagedList(page, resultsPerPage, function (err, relations) {
@@ -18,14 +21,14 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
         }
         else {
             // For each Relation obtained check if there are phrases to show.
-            relations.every(function (relation, index, relationsRef) {
+            var pino = relations.every(function (relation, index, relationsRef) {
                 // Phrases to show will be stored in this array, reinitialized for each Relation.
                 var phrasesForUser = [];
                 // Gets all the phrases by Relation.Name.
                 console.log("calling PhraseFacade.listByRelationName");
                 PhraseFacade.listByRelationName(relation.Name, function (err, phrases) {
                     // For each Phrase checks if it has consensus and if the given user has already evalued it.
-                    phrases.every(function (phrase, i, phrasesRef) {
+                    var titto = phrases.every(function (phrase, i, phrasesRef) {
                         hasConsensus(phrase.Answers, function (phraseHasConsensus) {
                             // debug
                             
@@ -39,14 +42,21 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                             // If this is the last iteration of the inner loop and we have results then 
                             // calls the callback and ends the recursion.
                             if (i == phrasesRef.length - 1 && phrasesForUser.length != 0) {
-                                callback(0, phrasesForUser);
+                                if (!hasCalled) {
+                                    callback(0, phrasesForUser);
+                                    hasCalled = true;
+                                }
                                 return false;
                             }
                             // If this is the last iteration of both loops then recursively call selectQuestions on next page
-                            if (i == phrasesRef.length - 1 && index == relationsRef.length - 1 && phrasesForUser.length == 0)
+                            if (i == phrasesRef.length - 1 && index == relationsRef.length - 1 && phrasesForUser.length == 0) {
                                 selectQuestions(userId, ++page, resultsPerPage, callback);
-                                relationsRef = []; // reset array to free space
-                                phrasesRef = []; // reset array to free space
+                               
+                            }
+
+                            relationsRef = null; // reset array to free space
+                            phrasesRef = null; // reset array to free space
+                            
                             return false;
                         })
                         // else continue looping on phrases
@@ -58,7 +68,7 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                     // else continue looping on relations
                 else return true;
             })
-        }
+        } 
     });
 }
 
@@ -68,13 +78,15 @@ function hasConsensus(answers, callback) {
         callback(false);
         return;
     }
-    answers.forEach(function (answer, i, answersRef) {
+    answers.every(function (answer, i, answersRef) {
         count = answer ? count + 1 : count;
         if (i == answersRef.length - 1) {
             zeros = answersRef.length - count;
             outcome = zeros != count && answersRef.length > 0;
             callback(outcome);
+            return false;
         }
+        return true;
     });
 }
 
@@ -143,4 +155,4 @@ function listByRelationName(relationName, callback) {
 }
 
 //hasConsensus([0], function(outcome){ console.log(outcome) });
-selectQuestions(2, 1, 2, function (err, phrases) { if(err) console.log(err.message); else console.log(phrases) });
+selectQuestions(2, 1, 2, function (err, phrases) { if (err) console.log(err.message); else console.log(phrases); mongoose.disconnect(); });
