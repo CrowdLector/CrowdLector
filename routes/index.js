@@ -31,11 +31,11 @@ router.post('/', function (req, res, next) {
                                 if (err) {
                                     res.render('error', err);
                                 } else {
-                                    //TODO Buttare in session gli id
+                                    session.questions = data.ids;
                                     res.render('questions', {
                                         title: 'CrowdLector',
                                         example: "Sono una domanda di esempio",
-                                        questions: data
+                                        questions: data.questions
                                     });
                                 }
                             });
@@ -53,11 +53,11 @@ router.post('/', function (req, res, next) {
 					if (err) {
 						res.render('error', err);
                     } else {
-                        //TODO Buttare in session gli id
+                        session.questions = data.ids;
                         res.render('questions', {
                             title: 'CrowdLector',
                             example: "Sono una domanda di esempio",
-                            questions: data
+                            questions: data.questions
                         });
 					}
 				});
@@ -74,8 +74,14 @@ router.post('/', function (req, res, next) {
 router.post('/saveAnswers', function (req, res, next) {
 	var session = req.session;
 	//Verificare che le domande tornate siano le stesse mandate e persisterle nel db
-	console.log(req.body);
-	//console.log(req.session);
+    console.log(req.body);
+    console.log("Mi sono salvato in sessione questi id");
+    console.log(session.questions);
+    req.body.forEach(function (item) {
+        if (session.item._id)
+    });
+
+
 });
 
 module.exports = router;

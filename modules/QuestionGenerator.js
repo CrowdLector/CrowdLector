@@ -24,15 +24,17 @@ module.exports = {
 	 */
 	generateQuestions : function(phrases, relation, callback) {
 		if(relation){
-			var questions = [];
+            var questions = [];
+            var ids = [];
 			if (phrases.length==0){
 				callback(0, questions);
 			} else {
 				phrases.forEach(function (currentPhrase, index, phrasesRef) {
                     generateQuestion(currentPhrase, relation, function (question) {
                         questions.push({ _id: currentPhrase._id, question: question });
-						if (index == phrasesRef.length - 1) {
-							callback(0, questions);
+                        ids.push(currentPhrase._id);
+                        if (index == phrasesRef.length - 1) {
+                            callback(0, { questions: questions, ids: ids });
 						}
 					});
 				});
