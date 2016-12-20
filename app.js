@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var config = require("./config.js");
+var session = require('express-session')
 
 var mongoose = require('mongoose');
 // mongoose's Promise library is deprecated, using bluebird 
@@ -13,6 +15,14 @@ mongoose.connect('mongodb://localhost/CrowdLector');
 var index = require('./routes/index');
 
 var app = express();
+
+app.set('trust proxy', 1); // trust first proxy
+app.use(session({
+    secret: config.cookieSecret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } //TODO in production change to true
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
