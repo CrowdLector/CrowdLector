@@ -10,19 +10,19 @@ block corpus
       .row.padded
         .col-lg-4
           .radio
-            label(for='answer-0yes')
-              input(type='radio', name='answer-0', id='answer-0yes', value="1", checked="checked", required)
+            label(for='answer-Example-yes')
+              input(type='radio', name='example', id='answer-Example-yes', value="1", checked="checked", required)
               | Yes
             span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            label(for='answer-0no')
-              input(type='radio', name='answer-0', id='answer-0no', value="0", disabled, required)
+            label(for='answer-Example-no')
+              input(type='radio', name='example', id='answer-Example-no', value="0", disabled, required)
               | No
             br
     hr
     -for(var index = 0; index < questions.length; index++)
       .row.padded
         .col-lg-4
-          label #{index}) #{questions[index].question}
+          label #{index+1}) #{questions[index].question}
       .row.padded
         .col-lg-4
           .radio

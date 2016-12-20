@@ -31,14 +31,11 @@ router.post('/', function (req, res, next) {
                                 if (err) {
                                     res.render('error', err);
                                 } else {
+                                    //TODO Buttare in session gli id
                                     res.render('questions', {
                                         title: 'CrowdLector',
                                         example: "Sono una domanda di esempio",
-                                        questions: [
-                                            { _id: 2, question: "ciaoone" },
-                                            { _id: 6, question: "pippo" },
-                                            { _id: 74, question: "pluto" },
-                                            { _id: 79, question: "qui, quo, qua" }]
+                                        questions: data
                                     });
                                 }
                             });
@@ -55,15 +52,12 @@ router.post('/', function (req, res, next) {
 				QuestionCreator.generate(data._id, function (err, data) {
 					if (err) {
 						res.render('error', err);
-					} else {
+                    } else {
+                        //TODO Buttare in session gli id
                         res.render('questions', {
                             title: 'CrowdLector',
                             example: "Sono una domanda di esempio",
-                            questions: [
-                                { _id: 2, question: "ciaoone" },
-                                { _id: 6, question: "pippo" },
-                                { _id: 74, question: "pluto" },
-                                { _id: 79, question: "qui, quo, qua" }]
+                            questions: data
                         });
 					}
 				});
