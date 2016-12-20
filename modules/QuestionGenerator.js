@@ -27,7 +27,7 @@ module.exports = {
             var questions = [];
             var ids = [];
 			if (phrases.length==0){
-				callback(0, questions);
+				callback(0, { questions: questions, ids: ids });
 			} else {
 				phrases.forEach(function (currentPhrase, index, phrasesRef) {
                     generateQuestion(currentPhrase, relation, function (question) {
