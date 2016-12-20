@@ -1,0 +1,7 @@
+extends header
+
+block corpus
+    // types are: success, info, warning, danger
+    .alert(class="alert-#{type}")
+        strong.capitalizeFirst #{type}! 
+        |  #{message}
