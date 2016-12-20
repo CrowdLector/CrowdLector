@@ -1,0 +1,15 @@
+extends header
+
+block corpus
+    // types are: success, info, warning, danger
+    .alert(class="alert-success")
+        strong.capitalizeFirst Success! 
+        |  You have completed the questions in this domain. Feel free to go on with the next batch.
+    .form-group
+        .row
+            .col-lg-2
+                form(method="GET", action=".")
+                    input.btn.btn-primary.form-control(type="Submit", value="More questions", id="submit")
+            .col-lg-1
+                form(method="POST", action="resetSession")
+                    input.btn.btn-danger.form-control(type="Submit", value="Exit", id="reset")
