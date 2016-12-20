@@ -136,7 +136,7 @@ module.exports = {
                     Phrase.Relation = params.modifiedObj.Relation ? params.modifiedObj.Relation : Phrase.Relation;
                     Phrase.Phrase = params.modifiedObj.Phrase ? params.modifiedObj.Phrase : Phrase.Phrase;
                     Phrase.Score = params.modifiedObj.Score ? params.modifiedObj.Score: Phrase.Score;
-                    Phrase.Anwser = params.modifiedObj.Anwser ? params.modifiedObj.Anwser : Phrase.Anwser;
+                    Phrase.Answer = params.modifiedObj.Answer ? params.modifiedObj.Answer : Phrase.Answer;
                     Phrase.Users = params.modifiedObj.Users ? params.modifiedObj.Users : Phrase.Users;
 
                     Phrase.save(function (err, Phrase) {
@@ -172,5 +172,43 @@ module.exports = {
                 callback(0, null); //204
             }
         });
+    },
+
+    addAnswer: function(params, callback){
+        PhraseModel.findByIdAndUpdate(
+            params._id,
+            {$push: {"Answers": params.value}},
+            {safe: true, upsert: true},
+            function(err, model) {
+                if (err) {
+                    callback({
+                        code: 500,
+                        message: 'Error when adding Answer to the Phrase.',
+                        error: err
+                    }, null);
+                } else {
+                    callback(0, model); //204
+                }
+            }
+        );
+    },
+
+    addUser: function(params, callback){
+        PhraseModel.findByIdAndUpdate(
+            params._id,
+            {$push: {"Users": params.value}},
+            {safe: true, upsert: true},
+            function(err, model) {
+                if (err) {
+                    callback({
+                        code: 500,
+                        message: 'Error when adding Answer to the Phrase.',
+                        error: err
+                    }, null);
+                } else {
+                    callback(0, model); //204
+                }
+            }
+        );
     }
 };

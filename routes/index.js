@@ -3,8 +3,10 @@ var router = express.Router();
 var UserHelper = require('../helpers/UserHelper.js');
 var UserFacade = require('../facades/UserFacade.js');
 var QuestionCreator = require('../helpers/QuestionCreator.js');
+var PhraseFacade = require(__base + 'facades/PhraseFacade');
 var Validator = require('validator');
 var async = require('async');
+const util = require('util');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -34,7 +36,7 @@ router.post('/', function (req, res, next) {
                                     res.render('error', err);
                                 } else {
                                     session.questions = data.ids;
-                                    session.questions.push(1);
+                                    session.questions.push("1");
                                     res.render('questions', {
                                         title: 'CrowdLector',
                                         example: {_id: 1, question:"Sono una domanda di esempio"},
@@ -57,7 +59,7 @@ router.post('/', function (req, res, next) {
 						res.render('error', err);
                     } else {
                         session.questions = data.ids;
-                        session.questions.push(1);
+                        session.questions.push("1");
                         res.render('questions', {
                             title: 'CrowdLector',
                             example: {_id: 1, question:"Sono una domanda di esempio"},
@@ -78,19 +80,47 @@ router.post('/', function (req, res, next) {
 router.post('/saveAnswers', function (req, res) {
 	var session = req.session;
 
-    console.log(req.body);
-    console.log("Mi sono salvato in sessione questi id");
-    console.log(session.questions);
-
     var errors = [];
 
     var keys = Object.keys(req.body);
     async.each(keys, function(item, callback){
-        console.log(item);
         if (session.questions.indexOf(item) > -1){
             if (Validator.isBoolean(req.body[item])) {
-                //Pusho la risposta nel db,
-				callback();
+				async.parallel([
+					function(cb){
+                        PhraseFacade.addAnswer({id: item, value: req.body[item]}, function(err, data){
+							if(err){
+                                errors.push({
+                                    type: "Problem adding answer to phrase",
+                                    id: item,
+                                    answer: req.body[item],
+									err: err
+                                });
+							}
+							cb();
+                        });
+					},
+					function(cb){
+                        PhraseFacade.addUser({id: item, value: session.user}, function(err, data){
+							if(err){
+                                errors.push({
+                                    type: "Problem adding user to phrase",
+                                    id: item,
+                                    user: session.user,
+									err: err
+                                });
+							}
+							cb();
+                        });
+					}
+				], function (err, results) {
+					if(err){
+						errors.push({
+							type: "è cascato il mondo per la seconda volta"
+						});
+					}
+                    callback();
+                });
             } else {
                 errors.push({
                     type: "Someone changed the POST to the server, not boolean",
@@ -113,18 +143,24 @@ router.post('/saveAnswers', function (req, res) {
 		} else {
     		if(errors.length > 0){
                 console.log("ERRORI:");
-                console.log(errors);
+                console.log(util.inspect(errors, false, null));
                 res.render('error', {
                     message: "ERROR",
                     error: {
                         status: errors
                     }
                 });
+                req.session.destroy(function(err) {
+                    // cannot access session here
+                });
 			} else {
     			res.render('message', {
     				type: "success",
 					message: "You have completed all the questions, GG!"
 				});
+                req.session.destroy(function(err) {
+                    // cannot access session here
+                });
 			}
 		}
 	});
