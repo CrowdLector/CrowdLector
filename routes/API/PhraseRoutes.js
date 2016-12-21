@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var PhraseHelper = require('../helpers/API/PhraseHelper.js');
+var PhraseHelper = require(__base + 'helpers/API/PhraseHelper.js');
 
 /*
  * GET

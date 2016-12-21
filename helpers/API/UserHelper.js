@@ -1,4 +1,4 @@
-var UserFacade = require('../facades/UserFacade');
+var UserFacade = require(__base + 'facades/UserFacade');
 
 module.exports = {
 

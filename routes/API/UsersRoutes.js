@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var UsersHelper = require('../Helpers/API/UsersHelper.js');
+var UsersHelper = require(__base + 'helpers/API/UserHelper');
 
 /*
  * GET

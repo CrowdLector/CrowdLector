@@ -1,4 +1,4 @@
-var RelationFacade = require('../facades/RelationFacade');
+var RelationFacade = require(__base + 'facades/RelationFacade');
 
 module.exports = {
 	
