@@ -119,8 +119,8 @@ module.exports = {
 						message: 'No such User'
 					}, null);
 				} else {
-					User.Nome = params.modifiedObj.Nome ? params.modifiedObj.Nome : User.Nome;
-					User.Cognome = params.modifiedObj.Cognome ? params.modifiedObj.Cognome : User.Cognome;
+                    User.Name = params.modifiedObj.Name ? params.modifiedObj.Name : User.Name;
+                    User.Surname = params.modifiedObj.Surname ? params.modifiedObj.Surname : User.Surname;
 					User.Email = params.modifiedObj.Email ? params.modifiedObj.Email : User.Email;
 					
 					User.save(function (err, User) {
