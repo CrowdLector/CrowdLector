@@ -17,7 +17,7 @@ var hasCalled = false;
 function selectQuestions(userId, page, resultsPerPage, callback) {
     hasCalled = false;
     // takes a paged list of Relations
-    RelationFacade.pagedList(page, resultsPerPage, function (err, relations){
+    RelationFacade.pagedList(page, resultsPerPage, function (err, relations) {
         if(err){
             // If there are no relations left ends the stack of recursion with an error.
             // This means that no phrases are left for that user to evaluate.
@@ -29,7 +29,7 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                 // Phrases to show will be stored in this array, reinitialized for each Relation.
                 var phrasesForUser = [];
                 // Gets all the phrases by Relation.Name.
-                PhraseFacade.listByRelationName(relation.Name, function (err, phrases) {
+                PhraseFacade.listByRelationNameAndUserNotPresent(relation.Name, userId, function (err, phrases) {
                     // For each Phrase checks if it has consensus and if the given user has already evalued it.
                     phrases.every(function (phrase, i, phrasesRef) {
                         hasConsensus(phrase.Answers, function (phraseHasConsensus) {
@@ -40,7 +40,7 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                             ' user id ' + userId); 
                             */
                             // If user has not evalued it AND Phrase doesn't have consensus, adds it to phrasesForUser
-                            if (phrase.Users.indexOf(userId) == -1 && !phraseHasConsensus)
+                            if (!phraseHasConsensus)
                                 phrasesForUser.push(phrase);
                             // If this is the last iteration of the inner loop and we have results then 
                             // calls the callback and ends the recursion.

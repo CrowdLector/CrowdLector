@@ -26,7 +26,9 @@ var stage_one = function (file, relations, cb) {
                 Relation: relations[name]._id,
                 RelationName: name,
                 Phrase: elements[1].trim(),
-                Score: parseFloat(elements[3])
+                Score: parseFloat(elements[3]),
+                Answers: [],
+                Users: []                
             });
         }
     });
