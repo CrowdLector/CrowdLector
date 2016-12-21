@@ -5,7 +5,7 @@ block corpus
   form.form-group(method="POST", action="saveAnswers")
     .bg-info
       .row.padded
-        .col-lg-4
+        .col-lg-12
           label Example) #{example.question}
       .row.padded
         .col-lg-4
@@ -21,7 +21,7 @@ block corpus
     hr
     -for(var index = 0; index < questions.length; index++)
       .row.padded
-        .col-lg-4
+        .col-lg-12
           label #{index+1}) #{questions[index].question}
       .row.padded
         .col-lg-4

@@ -39,8 +39,8 @@ router.post('/', function (req, res, next) {
                                     session.questions.push("1");
                                     res.render('questions', {
                                         title: 'CrowdLector',
-                                        example: {_id: 1, question:"Sono una domanda di esempio"},
-                                        questions: data.questions
+                                        example: data.questions.slice(0, 1)[0],
+                                        questions: data.questions.slice(1, data.questions.length)
                                     });
                                 }
                             });
@@ -62,8 +62,8 @@ router.post('/', function (req, res, next) {
                         session.questions.push("1");
                         res.render('questions', {
                             title: 'CrowdLector',
-                            example: {_id: 1, question:"Sono una domanda di esempio"},
-                            questions: data.questions
+                            example: data.questions.slice(0, 1)[0],
+                            questions: data.questions.slice(1, data.questions.length)
                         });
 					}
 				});
