@@ -47,6 +47,26 @@ module.exports = {
     },
 
     /**
+     * PhraseFacade.listByRelationNameAndUserNotPresent()
+     * @param {string} relationName Name of the relation to be retreived
+     * @param {string} userId Id of the user that doesn't have to be in the Users array
+     * @param {function} callback Function with two parameters, err and data
+     */
+    listByRelationNameAndUserNotPresent: function (relationName, userId, callback) {
+        PhraseModel.find({ 'RelationName': relationName, 'Users': { $ne: userId } }).sort('Score').exec(function (err, Phrases) {
+            if (err) {
+                callback({
+                    code: 500,
+                    message: 'Error when getting Phrase.',
+                    error: err
+                }, null);
+            } else {
+                callback(0, Phrases); //200
+            }
+        });
+    },
+
+    /**
      * PhraseFacade.list()
      * @param {function} callback Function with two parameters, err and data
      */
@@ -174,41 +194,31 @@ module.exports = {
         });
     },
 
-    addAnswer: function(params, callback){
-        PhraseModel.findByIdAndUpdate(
-            params._id,
-            {$push: {"Answers": params.value}},
-            {safe: true, upsert: true},
-            function(err, model) {
-                if (err) {
-                    callback({
-                        code: 500,
-                        message: 'Error when adding Answer to the Phrase.',
-                        error: err
-                    }, null);
-                } else {
-                    callback(0, model); //204
-                }
+    addAnswer: function (params, callback) {
+        PhraseModel.update({ _id: params.id }, { $push: { "Answers": params.value } }, function (err, model) {
+            if (err) {
+                callback({
+                    code: 500,
+                    message: 'Error when adding Answer to the Phrase.',
+                    error: err
+                }, null);
+            } else {
+                callback(0, model); //204
             }
-        );
+        });
     },
 
-    addUser: function(params, callback){
-        PhraseModel.findByIdAndUpdate(
-            params._id,
-            {$push: {"Users": params.value}},
-            {safe: true, upsert: true},
-            function(err, model) {
-                if (err) {
-                    callback({
-                        code: 500,
-                        message: 'Error when adding Answer to the Phrase.',
-                        error: err
-                    }, null);
-                } else {
-                    callback(0, model); //204
-                }
+    addUser: function (params, callback) {
+        PhraseModel.update({ _id: params.id }, { $push: { "Users": params.value } }, function (err, model) {
+            if (err) {
+                callback({
+                    code: 500,
+                    message: 'Error when adding User to the Phrase.',
+                    error: err
+                }, null);
+            } else {
+                callback(0, model); //204
             }
-        );
+        });
     }
 };
