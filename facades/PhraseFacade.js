@@ -47,6 +47,65 @@ module.exports = {
     },
 
     /**
+     * PhraseFacade.listPositive()
+     * @param {string} minNumber min number of Answer before being counted as positive 
+     * @param {function} callback Function with two parameters, err and data
+     */
+    listPositive: function (minNumber, callback) {
+        PhraseModel.find({$where:function(){return this.PositiveAnswerCount>this.NegativeAnswerCount && this.PositiveAnswerCount>minNumber}}).sort('Score').exec(function (err, Phrases) {
+            if (err) {
+                callback({
+                    code: 500,
+                    message: 'Error when getting Phrase.',
+                    error: err
+                }, null);
+            } else {
+                callback(0, Phrases); //200
+            }
+        });
+    },
+
+    /**
+     * PhraseFacade.listNegative()
+     * @param {string} minNumber min number of Answer before being counted as negative 
+     * @param {function} callback Function with two parameters, err and data
+     */
+    listNegative: function (minNumber, callback) {
+        PhraseModel.find({$where:function(){return this.PositiveAnswerCount<this.NegativeAnswerCount && this.NegativeAnswerCount>minNumber}}).sort('Score').exec(function (err, Phrases) {
+            if (err) {
+                callback({
+                    code: 500,
+                    message: 'Error when getting Phrase.',
+                    error: err
+                }, null);
+            } else {
+                callback(0, Phrases); //200
+            }
+        });
+    },
+
+    /**
+     * PhraseFacade.listNotDecided()
+     * @param {string} minNumber min number of Answer before being counted  
+     * @param {function} callback Function with two parameters, err and data
+     */
+    listNotDecided: function (minNumber, callback) {
+        PhraseModel.find({$where:function(){return this.PositiveAnswerCount==this.NegativeAnswerCount || (this.NegativeAnswerCount+this.PositiveAnswerCount)<minNumber}}).sort('Score').exec(function (err, Phrases) {
+            if (err) {
+                callback({
+                    code: 500,
+                    message: 'Error when getting Phrase.',
+                    error: err
+                }, null);
+            } else {
+                callback(0, Phrases); //200
+            }
+        });
+    },
+
+
+
+    /**
      * PhraseFacade.listByRelationNameAndUserNotPresent()
      * @param {string} relationName Name of the relation to be retreived
      * @param {string} userId Id of the user that doesn't have to be in the Users array
@@ -195,7 +254,12 @@ module.exports = {
     },
 
     addAnswer: function (params, callback) {
-        PhraseModel.update({ _id: params.id }, { $push: { "Answers": params.value } }, function (err, model) {
+        var query;
+        if(params.value)
+            query = { $push: { "Answers": params.value }, $inc: {"PositiveAnswerCount": 1 } };
+        else
+            query = { $push: { "Answers": params.value }, $inc: {"NegativeAnswerCount": 1 } };
+        PhraseModel.update({ _id: params.id }, query, function (err, model) {
             if (err) {
                 callback({
                     code: 500,

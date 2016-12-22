@@ -10,6 +10,8 @@ var PhraseSchema = new Schema({
 	'Phrase' : String,
 	'Score' : Number,
 	'Answers' : [Boolean],
+	'PositiveAnswerCount' : Number,
+	'NegativeAnswerCount' : Number,
 	'Users' : [Schema.Types.ObjectId]
 });
 
