@@ -1,4 +1,5 @@
 module.exports = {
     cookieSecret: "VerySecretCookieKey",
-    QuestionsPerPage: 20
+    QuestionsPerPage: 20,
+    minNumberOfWorkers: 2
 }
