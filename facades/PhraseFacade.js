@@ -52,7 +52,7 @@ module.exports = {
      * @param {function} callback Function with two parameters, err and data
      */
     listPositive: function (minNumber, callback) {
-        PhraseModel.find({$where:function(){return this.PositiveAnswerCount>this.NegativeAnswerCount && this.PositiveAnswerCount>minNumber}}).sort('Score').exec(function (err, Phrases) {
+        PhraseModel.find({$where:function(minNumber){return this.PositiveAnswerCount>this.NegativeAnswerCount && this.PositiveAnswerCount>minNumber}}).sort('Score').exec(function (err, Phrases) {
             if (err) {
                 callback({
                     code: 500,
@@ -71,7 +71,7 @@ module.exports = {
      * @param {function} callback Function with two parameters, err and data
      */
     listNegative: function (minNumber, callback) {
-        PhraseModel.find({$where:function(){return this.PositiveAnswerCount<this.NegativeAnswerCount && this.NegativeAnswerCount>minNumber}}).sort('Score').exec(function (err, Phrases) {
+        PhraseModel.find({$where:function(minNumber){return this.PositiveAnswerCount<this.NegativeAnswerCount && this.NegativeAnswerCount>minNumber}}).sort('Score').exec(function (err, Phrases) {
             if (err) {
                 callback({
                     code: 500,
@@ -90,7 +90,7 @@ module.exports = {
      * @param {function} callback Function with two parameters, err and data
      */
     listNotDecided: function (minNumber, callback) {
-        PhraseModel.find({$where:function(){return this.PositiveAnswerCount==this.NegativeAnswerCount || (this.NegativeAnswerCount+this.PositiveAnswerCount)<minNumber}}).sort('Score').exec(function (err, Phrases) {
+        PhraseModel.find({$where:function(minNumber){return this.PositiveAnswerCount==this.NegativeAnswerCount || (this.NegativeAnswerCount+this.PositiveAnswerCount)<minNumber}}).sort('Score').exec(function (err, Phrases) {
             if (err) {
                 callback({
                     code: 500,

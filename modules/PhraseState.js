@@ -1,4 +1,4 @@
-var PhraseFacade = require('../facade/PhraseFacade.js');
+var PhraseFacade = require('../facades/PhraseFacade.js');
 
 /**
  * phraseState (page, resultsPerPage,phrasesCorrect,phrasesWrong,phrasesNotEnded, callback)
@@ -11,17 +11,17 @@ var PhraseFacade = require('../facade/PhraseFacade.js');
  * 
  * Exported version hides recursion and takes less arguments. See module.export.
  */
-function phraseState(callback) {
+function phraseState(minNumber,callback) {
     // takes a paged list of Phrase
-    PhraseFacade.listPositive(function(err,positives){
+    PhraseFacade.listPositive(minNumber,function(err,positives){
         if (err)
             callback(err,null,null,null);
         else{
-            PhraseFacade.listNegative(function(err,negatives){
+            PhraseFacade.listNegative(minNumber,function(err,negatives){
                 if (err)
                     callback(err,positives,null,null);
                 else{
-                    PhraseFacade.listNotDecided(function(err,notDecided){
+                    PhraseFacade.listNotDecided(minNumber,function(err,notDecided){
                         if (err)
                             callback(err,positives,negatives,null);
                         else{
@@ -35,5 +35,6 @@ function phraseState(callback) {
 }
 
 module.exports={
-    PhraseState: function(callback){ phraseState(callback); }
+    PhraseStateNumber2: function(callback){ phraseState(2,callback); },
+    PhraseState: function(minNumber, callback){ phraseState(minNumber,callback); }
 };
