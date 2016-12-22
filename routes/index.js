@@ -15,69 +15,82 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
 	var session = req.session;
-	var user = {
-		Email: req.body.email,
-		Name: req.body.name,
-		Surname: req.body.surname
-    };
-	if (UserHelper.checkUser(user)) {
-		UserFacade.findByEmail({ email: user.Email }, function (err, data) {
-			if (err) {
-				if (err.code === 404) {
-                    UserFacade.create({ newObj: user }, function (err, data) {
-                        if (err) {
-                            res.render('error', {
-                                message: "Database error"
-                            });
-                        } else {
-                            session.user = data._id;
-                            QuestionCreator.generate(data._id, function (err, data) {
-                                if (err) {
-                                    res.render('error', err);
-                                } else {
-                                    session.questions = data.ids;
-                                    res.render('questions', {
-                                        title: 'CrowdLector',
-                                        example: data.questions.slice(0, 1)[0],
-                                        questions: data.questions.slice(1, data.questions.length)
-                                    });
-                                }
-                            });
-						}
-					});
-				} else {
-					res.render('error', {
-						message: "Database error"
-					});
-				}
-			} else {
-				//TODO verifica che l'utente sia corretto
-                session.user = data._id;
-                QuestionCreator.generate(data._id, function (err, data) {
-					if (err) {
-						res.render('error', err);
-                    } else {
-                        session.questions = data.ids;
-                        res.render('questions', {
-                            title: 'CrowdLector',
-                            example: data.questions.slice(0, 1)[0],
-                            questions: data.questions.slice(1, data.questions.length)
+    if(req.session.user){
+        QuestionCreator.generate(req.session.user, function (err, data) {
+            if (err) {
+                res.render('error', err);
+            } else {
+                session.questions = data.ids;
+                res.render('questions', {
+                    title: 'CrowdLector',
+                    example: data.questions.slice(0, 1)[0],
+                    questions: data.questions.slice(1, data.questions.length)
+                });
+            }
+        });
+    } else {
+        var user = {
+            Email: req.body.email,
+            Name: req.body.name,
+            Surname: req.body.surname
+        };
+        if (UserHelper.checkUser(user)) {
+            UserFacade.findByEmail({ email: user.Email }, function (err, data) {
+                if (err) {
+                    if (err.code === 404) {
+                        UserFacade.create({ newObj: user }, function (err, data) {
+                            if (err) {
+                                res.render('error', {
+                                    message: "Database error"
+                                });
+                            } else {
+                                session.user = data._id;
+                                QuestionCreator.generate(data._id, function (err, data) {
+                                    if (err) {
+                                        res.render('error', err);
+                                    } else {
+                                        session.questions = data.ids;
+                                        res.render('questions', {
+                                            title: 'CrowdLector',
+                                            example: data.questions.slice(0, 1)[0],
+                                            questions: data.questions.slice(1, data.questions.length)
+                                        });
+                                    }
+                                });
+                            }
                         });
-					}
-				});
-			}
-		});
-	} else {
-		res.render('error', {
-			message: "Data inserted not corrected"
-		});
-	}
-
+                    } else {
+                        res.render('error', {
+                            message: "Database error"
+                        });
+                    }
+                } else {
+                    //TODO verifica che l'utente sia corretto
+                    session.user = data._id;
+                    QuestionCreator.generate(data._id, function (err, data) {
+                        if (err) {
+                            res.render('error', err);
+                        } else {
+                            session.questions = data.ids;
+                            res.render('questions', {
+                                title: 'CrowdLector',
+                                example: data.questions.slice(0, 1)[0],
+                                questions: data.questions.slice(1, data.questions.length)
+                            });
+                        }
+                    });
+                }
+            });
+        } else {
+            res.render('error', {
+                message: "Data inserted not corrected"
+            });
+        }
+    }
 });
 
 router.post('/saveAnswers', function (req, res) {
 	var session = req.session;
-
     var errors = [];
     var keys = Object.keys(req.body);
     async.each(keys, function(item, callback){
@@ -147,19 +160,32 @@ router.post('/saveAnswers', function (req, res) {
                         status: errors
                     }
                 });
-                req.session.destroy(function(err) {
-                    // cannot access session here
-                });
 			} else {
     			res.render('finished', {
     				title: "CrowdLector"
 				});
-                req.session.destroy(function(err) {
-                    // cannot access session here
-                });
+
 			}
 		}
 	});
 });
+
+router.post('/resetSession', function (req, res) {
+    req.session.destroy(function(err) {
+        if(err){
+            res.render('error', {
+                message: "ERROR",
+                error: {
+                    status: "Errore nel distruggere la sessione",
+                    stack: err
+                }
+            });
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
+
 
 module.exports = router;
