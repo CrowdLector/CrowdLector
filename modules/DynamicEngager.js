@@ -71,7 +71,7 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
     });
 }  
 
-function hasConsensus(answers, callback) {
+function hasConsensus_old(answers, callback) {
     var count = 0;
     if(answers.length <= 1){
         callback(false);
@@ -85,6 +85,15 @@ function hasConsensus(answers, callback) {
                 callback(outcome);
             } 
         });   
+}
+
+function hasConsensus(minDiff, minAns, phrase) {
+    if(phrase.Answers.length <= 1)
+        return false;
+    else{
+    diff = Math.abs(phrase.PositiveAnswerCount - phrase.NegativeAnswerCount);
+    return diff >= minDiff && (phrase.PositiveAnswerCount >= minAns || phrase.NegativeAnswerCount >= minAns);
+    }
 }
 
 module.exports = {
