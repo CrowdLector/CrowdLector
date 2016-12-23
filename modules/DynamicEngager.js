@@ -4,7 +4,7 @@ var PhraseFacade = require(__base + 'facades/PhraseFacade');
 var hasCalled = false;
 
 /**
- * selectQuestions(userId, page, resultsPerPage, callback)
+ * selectQuestions(userId, page, resultsPerPage, minDiff, minAns, callback)
  *
  * @description :: Selects the phrases to show to the user. 
  * Starts from a bunch of Relations (from page 1 and at least 1 resultsPerPage),
@@ -14,7 +14,7 @@ var hasCalled = false;
  * 
  * Exported version hides recursion and takes less arguments. See module.export.
  */
-function selectQuestions(userId, page, resultsPerPage, callback) {
+function selectQuestions(userId, page, resultsPerPage, minDiff, minAns, callback) {
     hasCalled = false;
     // takes a paged list of Relations
     RelationFacade.pagedList(page, resultsPerPage, function (err, relations) {
@@ -31,8 +31,13 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                 // Gets all the phrases by Relation.Name.
                 PhraseFacade.listByRelationNameAndUserNotPresent(relation.Name, userId, function (err, phrases) {
                     // For each Phrase checks if it has consensus and if the given user has already evalued it.
+                     if(err){
+                         // If there are no phrases in DB for this relation
+                         callback(err, null);
+                    }
+                    else {
                     phrases.every(function (phrase, i, phrasesRef) {
-                        hasConsensus(phrase.Answers, function (phraseHasConsensus) {
+                        hasConsensus(minDiff, minAns, phrase, function (phraseHasConsensus) {
                             // debug
                             /*
                             console.log('Answers: ' + phrase.Answers + ' phraseHasConsensus: '  + phraseHasConsensus + ' user id index: ' + 
@@ -61,6 +66,7 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
                         // else continue looping on phrases
                         return true;
                     });
+                }
                 });
                 // If phrasesForUser has obtained stuff from at least 1 phrase then exit the loop on relations
                 if (phrasesForUser.length != 0) return false;
@@ -69,7 +75,7 @@ function selectQuestions(userId, page, resultsPerPage, callback) {
             });
         }
     });
-}  
+}
 
 function hasConsensus_old(answers, callback) {
     var count = 0;
@@ -87,17 +93,29 @@ function hasConsensus_old(answers, callback) {
         });   
 }
 
-function hasConsensus(minDiff, minAns, phrase) {
+/**
+ * hasConsensus(minDiff, minAns, phrase, callback)
+ *
+ * @description :: Returns true if there is consensus between answers for that phrase,
+ * false otherwise.
+ * Takes minDiff (minimum difference between answers) and minAns (minimum number of answers)
+ * as parameters to check the consensus.
+ * 
+ * 2 exported version available: 1 with initialized parameters, 1 with open parameters.
+ */
+function hasConsensus(minDiff, minAns, phrase, callback) {
     if(phrase.Answers.length <= 1)
-        return false;
+        callback(false);
     else{
     diff = Math.abs(phrase.PositiveAnswerCount - phrase.NegativeAnswerCount);
-    return diff >= minDiff && (phrase.PositiveAnswerCount >= minAns || phrase.NegativeAnswerCount >= minAns);
+    outcome = diff >= minDiff && (phrase.PositiveAnswerCount >= minAns || phrase.NegativeAnswerCount >= minAns);
+    callback(outcome);
     }
 }
 
 module.exports = {
-    selectQuestionsForUser: function (userId, callback) { selectQuestions(userId, 1, 1, callback); },
-    selectQuestionsForUserBuffered: function (userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, callback); },
-    hasConsensus: function (phrase, callback) { hasConsensus(phrase.Answers, callback); }
+    selectQuestionsForUser: function (userId, callback) { selectQuestions(userId, 1, 1, 1, 2, callback); },
+    selectQuestionsForUserBuffered: function (userId, bufferSize, minDiff, minAns, callback) { selectQuestions(userId, 1, bufferSize, minDiff, minAns, callback); },
+    hasConsensus: function (phrase, callback) { hasConsensus(1, 2, phrase, callback); },
+    hasConsensus: function (minDiff, minAns, phrase, callback) { hasConsensus(minDiff, minAns, phrase, callback); }
 };
