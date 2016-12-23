@@ -115,7 +115,8 @@ function hasConsensus(minDiff, minAns, phrase, callback) {
 
 module.exports = {
     selectQuestionsForUser: function (userId, callback) { selectQuestions(userId, 1, 1, 1, 2, callback); },
-    selectQuestionsForUserBuffered: function (userId, bufferSize, minDiff, minAns, callback) { selectQuestions(userId, 1, bufferSize, minDiff, minAns, callback); },
+    selectQuestionsForUserBuffered: function (userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, 1, 2, callback); },
+    selectQuestionsForUserBufferedOpt: function (userId, bufferSize,  minDiff, minAns, callback) { selectQuestions(userId, 1, bufferSize, minDiff, minAns, callback); },
     hasConsensus: function (phrase, callback) { hasConsensus(1, 2, phrase, callback); },
     hasConsensus: function (minDiff, minAns, phrase, callback) { hasConsensus(minDiff, minAns, phrase, callback); }
 };
