@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var UserHelper = require('../helpers/UserHelper.js');
-var UserFacade = require('../facades/UserFacade.js');
-var QuestionCreator = require('../helpers/QuestionCreator.js');
+var UserHelper = require('../helpers/UserHelper');
+var UserFacade = require('../facades/UserFacade');
+var QuestionCreator = require('../helpers/QuestionCreator');
 var PhraseFacade = require(__base + 'facades/PhraseFacade');
+var PhraseState = require(__base + 'modules/PhraseState');
 var Validator = require('validator');
 var async = require('async');
 const util = require('util');
@@ -13,20 +14,33 @@ router.get('/', function (req, res, next) {
 	res.render('index', { title: 'CrowdLector' });
 });
 
+function renderQuestionsToShow(req, res, next, err, data) {
+	if (err) {
+		res.render('error', err);
+	}
+	else if (data.length == 0) {
+		res.render('message', {
+			title: "CrowdLector",
+			message: "We don't need more answers from you, thank you.",
+			type: "success"
+		});
+	}
+	else {
+		session.questions = data.ids;
+		res.render('questions', {
+			title: 'CrowdLector',
+			example: data.questions.slice(0, 1)[0],
+			questions: data.questions.slice(1, data.questions.length)
+		});
+	}
+}
+
 router.post('/', function (req, res, next) {
 	var session = req.session;
     if(req.session.user){
         QuestionCreator.generate(req.session.user, function (err, data) {
-            if (err) {
-                res.render('error', err);
-            } else {
-                session.questions = data.ids;
-                res.render('questions', {
-                    title: 'CrowdLector',
-                    example: data.questions.slice(0, 1)[0],
-                    questions: data.questions.slice(1, data.questions.length)
-                });
-            }
+			renderQuestionsToShow(req, res, next, err, data);
+			session.questions = data.ids;
         });
     } else {
         var user = {
@@ -46,16 +60,8 @@ router.post('/', function (req, res, next) {
                             } else {
                                 session.user = data._id;
                                 QuestionCreator.generate(data._id, function (err, data) {
-                                    if (err) {
-                                        res.render('error', err);
-                                    } else {
-                                        session.questions = data.ids;
-                                        res.render('questions', {
-                                            title: 'CrowdLector',
-                                            example: data.questions.slice(0, 1)[0],
-                                            questions: data.questions.slice(1, data.questions.length)
-                                        });
-                                    }
+									renderQuestionsToShow(req, res, next, err, data);
+									session.questions = data.ids;
                                 });
                             }
                         });
@@ -68,16 +74,8 @@ router.post('/', function (req, res, next) {
                     //TODO verifica che l'utente sia corretto
                     session.user = data._id;
                     QuestionCreator.generate(data._id, function (err, data) {
-                        if (err) {
-                            res.render('error', err);
-                        } else {
-                            session.questions = data.ids;
-                            res.render('questions', {
-                                title: 'CrowdLector',
-                                example: data.questions.slice(0, 1)[0],
-                                questions: data.questions.slice(1, data.questions.length)
-                            });
-                        }
+						renderQuestionsToShow(req, res, next, err, data);
+						session.questions = data.ids;
                     });
                 }
             });
@@ -184,6 +182,22 @@ router.post('/resetSession', function (req, res) {
             res.redirect('/');
         }
     });
+});
+
+router.get('/results', function (req, res) {
+	PhraseState.PhraseStateNumber2(function (err, positives, negatives, notDecided) {
+		if (err) {
+			res.render('error', {
+				message: "ERROR",
+				error: {
+					status: "Errore nel distruggere la sessione",
+					stack: err
+				}
+			});
+		} else {
+			res.json({ "positives": positives, "negatives": negatives, "notDecided": notDecided });
+		}
+	});
 });
 
 

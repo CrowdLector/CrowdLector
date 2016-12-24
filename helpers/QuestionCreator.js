@@ -7,11 +7,15 @@ var config = require("../config.js");
 module.exports = {
 
     generate: function (userID, callback) {
-        DynamicEngager.selectQuestionsForUserBuffered(userID, config.QuestionsPerPage, function (err, Phrases) {
+		DynamicEngager.selectQuestionsForUserBuffered(userID, config.QuestionsPerPage, function (err, Phrases) {
+			console.log("phrases: " + Phrases);
             if (err) {
-                //TODO Gesire l'errore
                 callback(err, null);
-            } else {
+			}
+			else if (Phrases.length == 0) {
+				callback(0, []);
+			}
+			else {
                 RelationFacade.show({ id: Phrases[0].Relation }, function (err, relationObj) {
                     if (err) {
                         //TODO gestire l'errore

@@ -2,10 +2,10 @@ var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
 var RelationSchema = new Schema({
-	'Name' : String,
-	'RepresentativePhrase' : String,
-	'ObjectType' : String,
-	'SubjectType' : String
+	'Name': { type: String, required: true },
+	'RepresentativePhrase': { type: String, required: true },
+	'ObjectType': { type: String, required: true },
+	'SubjectType': { type: String, required: true }
 });
 
 module.exports = mongoose.model('Relation', RelationSchema);

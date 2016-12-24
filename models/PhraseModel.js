@@ -6,12 +6,12 @@ var PhraseSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Relation'
 	},
-	'RelationName' : String, // redundant for find without join
-	'Phrase' : String,
-	'Score' : Number,
+	'RelationName': { type: String, required: true }, // redundant for find without join
+	'Phrase': { type: String, required: true },
+	'Score': { type: Number, default: 0 },
 	'Answers' : [Boolean],
-	'PositiveAnswerCount' : Number,
-	'NegativeAnswerCount' : Number,
+	'PositiveAnswerCount': { type: Number, default: 0 },
+	'NegativeAnswerCount': { type: Number, default: 0 },
 	'Users' : [Schema.Types.ObjectId]
 });
 
