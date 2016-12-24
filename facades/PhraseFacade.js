@@ -52,7 +52,7 @@ module.exports = {
      * @param {function} callback Function with two parameters, err and data
      */
     listPositive: function (minNumber, callback) {
-        PhraseModel.find({$where:function(minNumber){return this.PositiveAnswerCount>this.NegativeAnswerCount && this.PositiveAnswerCount>minNumber}}).sort('Score').exec(function (err, Phrases) {
+		PhraseModel.find({ $where: "this.PositiveAnswerCount>this.NegativeAnswerCount && this.PositiveAnswerCount>=" + minNumber }).sort('Score').exec(function (err, Phrases) {
             if (err) {
                 callback({
                     code: 500,
@@ -70,8 +70,8 @@ module.exports = {
      * @param {string} minNumber min number of Answer before being counted as negative 
      * @param {function} callback Function with two parameters, err and data
      */
-    listNegative: function (minNumber, callback) {
-        PhraseModel.find({$where:function(minNumber){return this.PositiveAnswerCount<this.NegativeAnswerCount && this.NegativeAnswerCount>minNumber}}).sort('Score').exec(function (err, Phrases) {
+	listNegative: function (minNumber, callback) {
+		PhraseModel.find({ $where: "this.PositiveAnswerCount<this.NegativeAnswerCount && this.NegativeAnswerCount >=" + minNumber }).sort('Score').exec(function (err, Phrases) {
             if (err) {
                 callback({
                     code: 500,
@@ -90,7 +90,7 @@ module.exports = {
      * @param {function} callback Function with two parameters, err and data
      */
     listNotDecided: function (minNumber, callback) {
-        PhraseModel.find({$where:function(minNumber){return this.PositiveAnswerCount==this.NegativeAnswerCount || (this.NegativeAnswerCount+this.PositiveAnswerCount)<minNumber}}).sort('Score').exec(function (err, Phrases) {
+		PhraseModel.find({ $where: "this.PositiveAnswerCount==this.NegativeAnswerCount || (this.NegativeAnswerCount+this.PositiveAnswerCount)<" + minNumber }).sort('Score').exec(function (err, Phrases) {
             if (err) {
                 callback({
                     code: 500,
@@ -255,7 +255,7 @@ module.exports = {
 
     addAnswer: function (params, callback) {
         var query;
-        if(params.value)
+        if(params.value == 1)
             query = { $push: { "Answers": params.value }, $inc: {"PositiveAnswerCount": 1 } };
         else
             query = { $push: { "Answers": params.value }, $inc: {"NegativeAnswerCount": 1 } };

@@ -1,0 +1,51 @@
+extends layout
+
+block header
+	.container
+		h2 Positives
+		table.table
+			thead
+				tr
+					th Phrase
+					th Relation
+					th Answers
+					th Score
+			tbody
+				-for(i in positives)
+					tr
+						td #{positives[i].Phrase}
+						td #{positives[i].RelationName}
+						td #{positives[i].Answers}
+						td #{positives[i].Score}
+	.container
+		h2 Negatives
+		table.table
+			thead
+				tr
+					th Phrase
+					th Relation
+					th Answers
+					th Score
+			tbody
+				-for(i in negatives)
+					tr
+						td #{negatives[i].Phrase}
+						td #{negatives[i].RelationName}
+						td #{negatives[i].Answers}
+						td #{negatives[i].Score}
+	.container
+		h2 Not Decided Yet
+		table.table
+			thead
+				tr
+					th Phrase
+					th Relation
+					th Answers
+					th Score
+			tbody
+				-for(i in notDecided)
+					tr
+						td #{notDecided[i].Phrase}
+						td #{notDecided[i].RelationName}
+						td #{notDecided[i].Answers}
+						td #{notDecided[i].Score}

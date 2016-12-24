@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
 	res.render('index', { title: 'CrowdLector' });
 });
 
-function renderQuestionsToShow(req, res, next, err, data) {
+function renderQuestionsToShow(req, res, next, err, data, saveQuestions) {
 	if (err) {
 		res.render('error', err);
 	}
@@ -26,12 +26,21 @@ function renderQuestionsToShow(req, res, next, err, data) {
 		});
 	}
 	else {
-		session.questions = data.ids;
-		res.render('questions', {
-			title: 'CrowdLector',
-			example: data.questions.slice(0, 1)[0],
-			questions: data.questions.slice(1, data.questions.length)
-		});
+		saveQuestions();
+		if (data.questions.length >= 20) {
+			res.render('questions', {
+				title: 'CrowdLector',
+				example: data.questions.slice(0, 1)[0],
+				questions: data.questions.slice(1, data.questions.length)
+			});
+		}
+		else {
+			res.render('questions', {
+				title: 'CrowdLector',
+				example: null,
+				questions: data.questions
+			});
+		}
 	}
 }
 
@@ -39,8 +48,7 @@ router.post('/', function (req, res, next) {
 	var session = req.session;
     if(req.session.user){
         QuestionCreator.generate(req.session.user, function (err, data) {
-			renderQuestionsToShow(req, res, next, err, data);
-			session.questions = data.ids;
+			renderQuestionsToShow(req, res, next, err, data, function () { session.questions = data.ids });
         });
     } else {
         var user = {
@@ -60,8 +68,7 @@ router.post('/', function (req, res, next) {
                             } else {
                                 session.user = data._id;
                                 QuestionCreator.generate(data._id, function (err, data) {
-									renderQuestionsToShow(req, res, next, err, data);
-									session.questions = data.ids;
+									renderQuestionsToShow(req, res, next, err, data, function () { session.questions = data.ids });
                                 });
                             }
                         });
@@ -74,9 +81,8 @@ router.post('/', function (req, res, next) {
                     //TODO verifica che l'utente sia corretto
                     session.user = data._id;
                     QuestionCreator.generate(data._id, function (err, data) {
-						renderQuestionsToShow(req, res, next, err, data);
-						session.questions = data.ids;
-                    });
+						renderQuestionsToShow(req, res, next, err, data, function () { session.questions = data.ids });
+					});
                 }
             });
         } else {
@@ -190,12 +196,17 @@ router.get('/results', function (req, res) {
 			res.render('error', {
 				message: "ERROR",
 				error: {
-					status: "Errore nel distruggere la sessione",
-					stack: err
+					status: err.message,
+					stack: err.error
 				}
 			});
 		} else {
-			res.json({ "positives": positives, "negatives": negatives, "notDecided": notDecided });
+			res.render('state',
+				{
+					positives: positives,
+					negatives: negatives,
+					notDecided: notDecided
+				});
 		}
 	});
 });

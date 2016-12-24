@@ -8,7 +8,6 @@ module.exports = {
 
     generate: function (userID, callback) {
 		DynamicEngager.selectQuestionsForUserBuffered(userID, config.QuestionsPerPage, function (err, Phrases) {
-			console.log("phrases: " + Phrases);
             if (err) {
                 callback(err, null);
 			}
