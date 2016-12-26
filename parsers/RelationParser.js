@@ -7,8 +7,43 @@ var BaseParser = require("./BaseParser");
 
 var relations = {};
 
+var stage_three = function (rs, types, file, cb){
+    var line = stream.create(file, { bufferSize: 300 });
+    var ts = {}
+
+
+    line.on('data', function (line, isEnd) {
+        var elements = line.split("\t");
+
+        if (types.indexOf(elements[0].trim()) != -1)
+            ts[elements[0]] = elements[1].trim().replace("\"", "").replace("\"", "");
+    });
+
+    line.on('end', function () { // emitted at the end of file
+
+        var rs2 = [];
+
+        rs.forEach(function (r){
+            rs2.push({
+                SubjectType: ts[r.SubjectType],
+                ObjectType: ts[r.ObjectType],
+                RepresentativePhrase: r.RepresentativePhrase,
+                Name: r.Name
+            });
+        });
+
+        cb(true, rs2);
+    });
+
+    line.on('error', function (e) { // emitted when an error occurred
+        cb(false);
+    });
+}
+
 var stage_two = function (file, cb) {
     var line = stream.create(file, { bufferSize: 300 });
+    var rs = [];
+    var types = [];
 
     line.on('data', function (line, isEnd) {
         var elements = line.split("\t");
@@ -16,20 +51,21 @@ var stage_two = function (file, cb) {
         var name = BaseParser.simplify_name(elements[0]);
 
         if (typeof relations[name] != "undefined") {
-            relations[name].SubjectType = BaseParser.simplify_name(elements[1]);
-            relations[name].ObjectType = BaseParser.simplify_name(elements[2]);
+            relations[name].SubjectType = elements[1].trim();
+            relations[name].ObjectType = elements[2].trim();
+
+            if (types.indexOf(elements[1].trim()) == -1)
+                types.push(elements[1].trim());
+
+            if (types.indexOf(elements[2].trim()) == -1)
+                types.push(elements[2].trim());
+
+            rs.push(relations[name])
         }
     });
 
     line.on('end', function () { // emitted at the end of file
-
-        var rs = [];
-
-        Object.keys(relations).forEach(function (e) {
-            rs.push(relations[e]);
-        });
-
-        cb(true, rs);
+        cb(true, rs, types);
     });
 
     line.on('error', function (e) { // emitted when an error occurred
@@ -71,24 +107,32 @@ var simplify_access = function (elements) {
 };
 
 module.exports = {
-    createRelations: function (file_pharses_rappresentative, file_relation_schema, cb) {
+    createRelations: function (file_pharses_rappresentative, file_relation_schema, file_types_labels, cb) {
         var RelationModel = require("../models/RelationModel");
 
         stage_one(file_pharses_rappresentative, function (status) {
             if (!status)
                 return cb(false);
 
-            stage_two(file_relation_schema, function (status, rs) {
+            stage_two(file_relation_schema, function (status, rs, types) {
                 if (!status)
                     return cb(false);
 
-                console.log("Relations loaded", rs.length);
+                stage_three(rs, types, file_types_labels, function (status, rs) {
+                    if (!status)
+                        return cb(false);
 
-                RelationModel.collection.insert(rs, function (err, list) {
-                    if (err) return cb(false);
-                    else return cb(true, simplify_access(list.ops));
+                    console.log("Relations loaded", rs.length);
 
-                });
+                    RelationModel.collection.insert(rs, function (err, list) {
+                        if (err) return cb(false);
+                        else return cb(true, simplify_access(list.ops));
+
+                    });
+
+                })
+
+
 
 
             });

@@ -13,7 +13,9 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
 db.once('open', function() {
 
-    RelationParser.createRelations("./input/phrases_representative.tsv", "./input/relations_schema.tsv",function (status, rs) {
+    RelationParser.createRelations( "./input/phrases_representative.tsv",
+                                    "./input/relations_schema.tsv",
+                                    "./input/types_labels.tsv",function (status, rs) {
         PhraseParser.createPhrases("./input/phrases_refactor.tsv", rs, function (status, phrases){
             console.log("load complete");
             process.exit();
