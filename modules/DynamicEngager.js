@@ -15,16 +15,12 @@ var hasCalled = false;
  * Exported version hides recursion and takes less arguments. See module.export.
  */
 function selectQuestions(userId, page, resultsPerPage, minDiff, minAns, callback) {
-	console.log("selectQuestions Data");
-	console.log(userId, page, resultsPerPage, minDiff, minAns);
-	hasCalled = false;
 	// takes a paged list of Relations
 	RelationFacade.pagedList(page, resultsPerPage, function (err, relations) {
-		console.log("RelationFacade.pagedList.length");
-		console.log(relations.length);
 		if (err || relations.length == 0) {
 			// If there are no relations left ends the stack of recursion with an error.
 			// This means that no phrases are left for that user to evaluate.
+			//console.log("relations.length == 0 is true, callback")
 			callback(err, []);
 		}
 		else {
@@ -34,23 +30,21 @@ function selectQuestions(userId, page, resultsPerPage, minDiff, minAns, callback
 				var phrasesForUser = [];
 				// Gets all the phrases by Relation.Name.
 				PhraseFacade.listByRelationNameAndUserNotPresent(relation.Name, userId, function (err, phrases) {
-					console.log("phrases");
-					console.log(phrases)
 					// For each Phrase checks if it has consensus and if the given user has already evalued it.
-					if (err || phrases.length == 0) {
-						console.log("phrases.length == 0 is true")
+					if (err) {
+						//console.log("err on phrases, callback")
 						// If there are no phrases in DB for this relation
 						callback(err, []);
+						return false;
+					}
+					else if (phrases.length == 0 && index == relationsRef.length - 1) {
+						// If this is the last iteration on relation and the db returned an empty list (user has already answered to that relation)
+						selectQuestions(userId, ++page, resultsPerPage, minDiff, minAns, callback);
+						return false;
 					}
 					else {
 						phrases.every(function (phrase, i, phrasesRef) {
-							hasConsensus(minDiff, minAns, phrase, function (phraseHasConsensus) {
-								// debug
-								/*
-								console.log('Answers: ' + phrase.Answers + ' phraseHasConsensus: '  + phraseHasConsensus + ' user id index: ' + 
-								phrase.Users.indexOf(userId) + ' utenti per frase: ' + phrase.Users +
-								' user id ' + userId); 
-								*/
+							hasConsensus(minDiff, minAns, phrase, function (phraseHasConsensus) {								
 								// If user has not evalued it AND Phrase doesn't have consensus, adds it to phrasesForUser
 								if (!phraseHasConsensus)
 									phrasesForUser.push(phrase);
@@ -58,6 +52,7 @@ function selectQuestions(userId, page, resultsPerPage, minDiff, minAns, callback
 								// calls the callback and ends the recursion.
 								if (i == phrasesRef.length - 1 && phrasesForUser.length != 0) {
 									if (!hasCalled) {
+										//console.log("phrases found, callback")
 										callback(0, phrasesForUser);
 										hasCalled = true;
 									}
@@ -119,9 +114,9 @@ function hasConsensus(minDiff, minAns, phrase, callback) {
 }
 
 module.exports = {
-	selectQuestionsForUser: function (userId, callback) { selectQuestions(userId, 1, 1, 1, 2, callback); },
-	selectQuestionsForUserBuffered: function (userId, bufferSize, callback) { selectQuestions(userId, 1, bufferSize, 1, 2, callback); },
-	selectQuestionsForUserBufferedOpt: function (userId, bufferSize, minDiff, minAns, callback) { selectQuestions(userId, 1, bufferSize, minDiff, minAns, callback); },
+	selectQuestionsForUser: function (userId, callback) { hasCalled = false; selectQuestions(userId, 1, 1, 1, 2, callback); },
+	selectQuestionsForUserBuffered: function (userId, bufferSize, callback) { hasCalled = false; selectQuestions(userId, 1, bufferSize, 1, 2, callback); },
+	selectQuestionsForUserBufferedOpt: function (userId, bufferSize, minDiff, minAns, callback) { hasCalled = false; selectQuestions(userId, 1, bufferSize, minDiff, minAns, callback); },
 	hasConsensus: function (phrase, callback) { hasConsensus(1, 2, phrase, callback); },
 	hasConsensusOpt: function (minDiff, minAns, phrase, callback) { hasConsensus(minDiff, minAns, phrase, callback); }
 };

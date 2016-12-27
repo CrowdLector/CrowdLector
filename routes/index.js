@@ -46,7 +46,7 @@ function renderQuestionsToShow(req, res, next, err, data, saveQuestions) {
 
 router.post('/', function (req, res, next) {
 	var session = req.session;
-    if(req.session.user){
+	if (req.session.user) {
         QuestionCreator.generate(req.session.user, function (err, data) {
 			renderQuestionsToShow(req, res, next, err, data, function () { session.questions = data.ids });
         });
@@ -66,7 +66,7 @@ router.post('/', function (req, res, next) {
                                     message: "Database error"
                                 });
                             } else {
-                                session.user = data._id;
+								session.user = data._id;
                                 QuestionCreator.generate(data._id, function (err, data) {
 									renderQuestionsToShow(req, res, next, err, data, function () { session.questions = data.ids });
                                 });
@@ -79,7 +79,7 @@ router.post('/', function (req, res, next) {
                     }
                 } else {
                     //TODO verifica che l'utente sia corretto
-                    session.user = data._id;
+					session.user = data._id;
                     QuestionCreator.generate(data._id, function (err, data) {
 						renderQuestionsToShow(req, res, next, err, data, function () { session.questions = data.ids });
 					});
