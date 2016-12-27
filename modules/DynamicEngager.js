@@ -15,9 +15,13 @@ var hasCalled = false;
  * Exported version hides recursion and takes less arguments. See module.export.
  */
 function selectQuestions(userId, page, resultsPerPage, minDiff, minAns, callback) {
+	console.log("selectQuestions Data");
+	console.log(userId, page, resultsPerPage, minDiff, minAns);
 	hasCalled = false;
 	// takes a paged list of Relations
 	RelationFacade.pagedList(page, resultsPerPage, function (err, relations) {
+		console.log("RelationFacade.pagedList.length");
+		console.log(relations.length);
 		if (err || relations.length == 0) {
 			// If there are no relations left ends the stack of recursion with an error.
 			// This means that no phrases are left for that user to evaluate.
@@ -30,8 +34,11 @@ function selectQuestions(userId, page, resultsPerPage, minDiff, minAns, callback
 				var phrasesForUser = [];
 				// Gets all the phrases by Relation.Name.
 				PhraseFacade.listByRelationNameAndUserNotPresent(relation.Name, userId, function (err, phrases) {
+					console.log("phrases");
+					console.log(phrases)
 					// For each Phrase checks if it has consensus and if the given user has already evalued it.
 					if (err || phrases.length == 0) {
+						console.log("phrases.length == 0 is true")
 						// If there are no phrases in DB for this relation
 						callback(err, []);
 					}
@@ -58,9 +65,7 @@ function selectQuestions(userId, page, resultsPerPage, minDiff, minAns, callback
 								}
 								// If this is the last iteration of both loops then recursively call selectQuestions on next page
 								if (i == phrasesRef.length - 1 && index == relationsRef.length - 1 && phrasesForUser.length == 0)
-									selectQuestions(userId, ++page, resultsPerPage, callback);
-								relationsRef = []; // reset array to free space
-								phrasesRef = []; // reset array to free space
+									selectQuestions(userId, ++page, resultsPerPage, minDiff, minAns, callback);
 								return false;
 							});
 							// else continue looping on phrases
