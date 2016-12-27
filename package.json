@@ -1,6 +1,6 @@
 {
   "name": "crowdlector",
-  "version": "0.0.0",
+  "version": "0.8",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -19,5 +19,20 @@
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.0",
     "validator": "^6.2.0"
-  }
+  },
+  "author": "CrowdLector (https://github.com/CrowdLector)",
+  "contributors": [
+    "Lorenzo Ariemma (https://github.com/lorenzo93)",
+    "Gaetano Bonofiglio (https://github.com/Kidel)",
+    "Marco Cappello (https://github.com/kappa89)",
+    "Matteo Filippi (https://github.com/Macr0s)",
+    "Veronica Iovinella (https://github.com/NeejaYanglea)",
+    "Miriana Mancini (https://github.com/MirianaMancini)",
+    "Nicola Sardella (https://github.com/zell92)"
+  ],
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/CrowdLector/CrowdLector"
+  },
+  "license": "MIT"
 }
