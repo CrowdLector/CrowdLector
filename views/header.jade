@@ -7,12 +7,14 @@ block header
     -if(info)
       p.alert.alert-info 
         b Task: select the correct answer for every question. 
-      .alert.alert-warning Keep in mind that our goal is to find sentences that can express a relation and we don't want the time of the sentence 
-        | to be taken into account.
+      .alert.alert-warning Please keep in mind that our goal is to find sentences (extracted from complex texts) that can express a relation, and we don't want the time of the sentence 
+        | to be taken into account. We also don't care if the sentence is incomplete.
         br
         b Meaning that for us the sentence "was married to" is 
           u equivalent
           |  to "is married to", but 
-          u not
+          u.red not
           |  equivalent to "has met".
+        br
+        | There are also some special capitalized words (like "NAT") that represent different words of the same category (NAT means nationality and could have been "italian" or "american" in the original text).
     block corpus

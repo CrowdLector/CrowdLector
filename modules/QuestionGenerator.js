@@ -5,10 +5,10 @@ function generateQuestion(phrase, relation, callback) {
 	//phrase and relation not null
 	var subjectType = relation.SubjectType;
 	var objectType = relation.ObjectType;
-	var firstMember = "<b>" + subjectType + "</b> " + phrase.Phrase + " <b>" + objectType + "</b>";
-	var secondMember = "<b>" + subjectType + "</b> " + relation.RepresentativePhrase + " <b>" + objectType + "</b>";
+	var firstMember = "<b>" + subjectType + "</b> <u>" + phrase.Phrase + "</u> <b>" + objectType + "</b>";
+	var secondMember = "<b>" + subjectType + "</b> <u>" + relation.RepresentativePhrase + "</u> <b>" + objectType + "</b>";
 
-	var question = "<span class='grey'>Does </span>\u00AB" + firstMember + "\u00BB <span class='grey'>mean that</span> \u00AB" + secondMember + "\u00BB?";
+	var question = "<span class='grey'>Does </span>\u00AB... " + firstMember + " ...\u00BB <span class='grey'>mean that</span> \u00AB... " + secondMember + " ...\u00BB?";
 	callback(question);
 }
 
