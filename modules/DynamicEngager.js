@@ -44,7 +44,7 @@ function selectQuestions(userId, page, resultsPerPage, minDiff, minAns, callback
 					}
 					else {
 						phrases.every(function (phrase, i, phrasesRef) {
-							hasConsensus(minDiff, minAns, phrase, function (phraseHasConsensus) {								
+							hasConsensus(minDiff, minAns, phrase, function (phraseHasConsensus) {
 								// If user has not evalued it AND Phrase doesn't have consensus, adds it to phrasesForUser
 								if (!phraseHasConsensus)
 									phrasesForUser.push(phrase);

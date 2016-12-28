@@ -5,10 +5,10 @@ function generateQuestion(phrase, relation, callback) {
 	//phrase and relation not null
 	var subjectType = relation.SubjectType;
 	var objectType = relation.ObjectType;
-	var firstMember = "<" + subjectType + "> " + phrase.Phrase + " <" + objectType + ">";
-	var secondMember = "<" + subjectType + "> " + relation.RepresentativePhrase + " <" + objectType + ">";
-	
-	var question = "Does \"" + firstMember + "\" mean that \"" + secondMember + "\"?";
+	var firstMember = "<b>" + subjectType + "</b> " + phrase.Phrase + " <b>" + objectType + "</b>";
+	var secondMember = "<b>" + subjectType + "</b> " + relation.RepresentativePhrase + " <b>" + objectType + "</b>";
+
+	var question = "<span class='grey'>Does </span>\u00AB" + firstMember + "\u00BB <span class='grey'>mean that</span> \u00AB" + secondMember + "\u00BB?";
 	callback(question);
 }
 
@@ -22,25 +22,25 @@ module.exports = {
 	 * the associated relation's representative phrase.
 	 *
 	 */
-	generateQuestions : function(phrases, relation, callback) {
-		if(relation){
-            var questions = [];
-            var ids = [];
-			if (phrases.length==0){
+	generateQuestions: function (phrases, relation, callback) {
+		if (relation) {
+			var questions = [];
+			var ids = [];
+			if (phrases.length == 0) {
 				callback(0, { questions: questions, ids: ids });
 			} else {
 				phrases.forEach(function (currentPhrase, index, phrasesRef) {
-                    generateQuestion(currentPhrase, relation, function (question) {
-                        questions.push({ _id: currentPhrase._id, question: question });
-                        ids.push(currentPhrase._id);
-                        if (index == phrasesRef.length - 1) {
-                            callback(0, { questions: questions, ids: ids });
+					generateQuestion(currentPhrase, relation, function (question) {
+						questions.push({ _id: currentPhrase._id, question: question });
+						ids.push(currentPhrase._id);
+						if (index == phrasesRef.length - 1) {
+							callback(0, { questions: questions, ids: ids });
 						}
 					});
 				});
 			}
 		} else {
-			callback({message: 'ERR: Cannot generate questions! Input relation not exist.'}, null);
+			callback({ message: 'ERR: Cannot generate questions! Input relation not exist.' }, null);
 		}
 
 	}

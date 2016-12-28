@@ -1,17 +1,18 @@
 extends layout
 
 block header
-  h1= title
-  p Welcome to #{title}
-  p Please select the correct answer for every question. 
-  .bg-warning Keep in mind that our goal is to find sentences that can express a relation and we don't want the time of the sentence 
-    | to be taken into account.
-    br
-    b Meaning that for us the sentence "was married to" is 
-      u equivalent
-      |  to "is married to", but 
-      u not
-      |  equivalent to "has met".
-  br
-  br
-  block corpus
+  div(class="#{jumbotron ? 'jumbotron':''}")
+    h1= title
+    p Welcome to #{title}
+    -if(info)
+      p.alert.alert-info 
+        b Task: select the correct answer for every question. 
+      .alert.alert-warning Keep in mind that our goal is to find sentences that can express a relation and we don't want the time of the sentence 
+        | to be taken into account.
+        br
+        b Meaning that for us the sentence "was married to" is 
+          u equivalent
+          |  to "is married to", but 
+          u not
+          |  equivalent to "has met".
+    block corpus

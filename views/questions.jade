@@ -4,10 +4,12 @@ block corpus
 	hr
 	form.form-group(method="POST", action="saveAnswers")
 		-if(example != null)
-			.bg-info(style="border: 1px solid #777")
+			.alert.alert-info
 				.row.padded
 					.col-lg-12
-						label Example) #{example.question}
+						label 
+							b Example) 
+							| !{example.question}
 				.row.padded
 					.col-lg-4
 						.radio
@@ -19,25 +21,27 @@ block corpus
 							input(type='radio', name='#{example._id}', id='answer-Example-no', value="0", disabled, required)
 							| No
 						br
-				hr
 		-for(var index = 0; index < questions.length; index++)
 			.row.padded
 				.col-lg-12
-					label #{index+1}) #{questions[index].question}
-			.row.padded
-				.col-lg-4
-					.radio
-					label(for='answer-#{index}yes')
-						input(type='radio', name='#{questions[index]._id}', id='answer-#{index}yes', value="1", required)
-						| Yes
-					span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					label(for='answer-#{index}no')
-						input(type='radio', name='#{questions[index]._id}', id='answer-#{index}no', value="0", required)
-						| No
-			hr
-		br
-		.row
-			.col-lg-1
-				input.btn.btn-primary.form-control(type="Submit", value="Submit", id="submit")
-			.col-lg-1
-				input.btn.btn-default.form-control(type="Reset", value="Reset", id="reset")
+					.panel.panel-default
+						.panel-body
+							label 
+								b #{index+1}) 
+								| !{questions[index].question}
+						.panel-footer
+							.radio
+							label(for='answer-#{index}yes')
+								input(type='radio', name='#{questions[index]._id}', id='answer-#{index}yes', value="1", required)
+								| Yes
+							span &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							label(for='answer-#{index}no')
+								input(type='radio', name='#{questions[index]._id}', id='answer-#{index}no', value="0", required)
+								| No
+		.panel.panel-default
+			.panel-body
+				.row
+				.col-lg-2
+					input.btn.btn-primary.form-control(type="Submit", value="Submit", id="submit")
+				.col-lg-2
+					input.btn.btn-default.form-control(type="Reset", value="Reset", id="reset")
