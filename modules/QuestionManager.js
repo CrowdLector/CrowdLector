@@ -7,7 +7,7 @@ var config = require("../config.js");
 module.exports = {
 
 	generate: function (userID, callback) {
-		DynamicEngager.selectQuestionsForUserBuffered(userID, config.QuestionsPerPage, function (err, Phrases) {
+		DynamicEngager.selectQuestionsForUserBufferedOpt(userID, config.QuestionsPerPage, config.minDiff, config.minNumberOfAnswers, function (err, Phrases) {
 			if (err) {
 				callback(err, null);
 			}

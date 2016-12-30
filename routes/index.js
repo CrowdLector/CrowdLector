@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var UserHelper = require('../helpers/UserHelper');
-var UserFacade = require('../facades/UserFacade');
-var QuestionManager = require('../modules/QuestionManager');
+var UserHelper = require(__base + 'helpers/UserHelper');
+var UserFacade = require(__base + 'facades/UserFacade');
+var QuestionManager = require(__base + 'modules/QuestionManager');
 var PhraseFacade = require(__base + 'facades/PhraseFacade');
 var PhraseState = require(__base + 'modules/PhraseState');
 var Validator = require('validator');
 var async = require('async');
+var config = require(__base + 'config');
 const util = require('util');
 
 /* GET home page. */
@@ -200,7 +201,7 @@ router.post('/resetSession', function (req, res) {
 });
 
 router.get('/results', function (req, res) {
-	PhraseState.PhraseStateNumber2(function (err, positives, negatives, notDecided) {
+	PhraseState.PhraseState(config.minNumberOfAnswers ,function (err, positives, negatives, notDecided) {
 		if (err) {
 			res.render('error', {
 				message: "ERROR",

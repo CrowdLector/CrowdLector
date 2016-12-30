@@ -1,7 +1,4 @@
-var UserFacade = require('../facades/UserFacade');
 var Validator = require('validator');
- 
-
 
 module.exports = {
 	checkUser: function(user){
