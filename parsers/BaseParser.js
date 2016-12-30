@@ -5,7 +5,9 @@
 
 module.exports = {
     simplify_name: function (name) {
-        var parts = name.trim().split(".");
-        return parts[parts.length - 1];
+        return name;
+
+        //ar parts = name.trim().split(".");
+        //return parts[parts.length - 1];
     }
 };

@@ -5,8 +5,6 @@
 var stream = require('linestream');
 var BaseParser = require("./BaseParser");
 
-var relations = {};
-
 var stage_three = function (rs, types, file, cb){
     var line = stream.create(file, { bufferSize: 300 });
     var ts = {}
@@ -40,7 +38,7 @@ var stage_three = function (rs, types, file, cb){
     });
 }
 
-var stage_two = function (file, cb) {
+var stage_two = function (file, relations, cb) {
     var line = stream.create(file, { bufferSize: 300 });
     var rs = [];
     var types = [];
@@ -60,7 +58,7 @@ var stage_two = function (file, cb) {
             if (types.indexOf(elements[2].trim()) == -1)
                 types.push(elements[2].trim());
 
-            rs.push(relations[name])
+            rs.push(relations[name]);
         }
     });
 
@@ -76,6 +74,8 @@ var stage_two = function (file, cb) {
 var stage_one = function (file, cb) {
     var line = stream.create(file, { bufferSize: 300 });
 
+    var relations = {};
+
     line.on('data', function (line, isEnd) {
         var elements = line.split("\t");
         var name = BaseParser.simplify_name(elements[0]);
@@ -87,7 +87,7 @@ var stage_one = function (file, cb) {
     });
 
     line.on('end', function () { // emitted at the end of file
-        cb(true);
+        cb(true, relations);
     });
 
     line.on('error', function (e) { // emitted when an error occurred
@@ -110,11 +110,11 @@ module.exports = {
     createRelations: function (file_pharses_rappresentative, file_relation_schema, file_types_labels, cb) {
         var RelationModel = require("../models/RelationModel");
 
-        stage_one(file_pharses_rappresentative, function (status) {
+        stage_one(file_pharses_rappresentative, function (status, relations) {
             if (!status)
                 return cb(false);
 
-            stage_two(file_relation_schema, function (status, rs, types) {
+            stage_two(file_relation_schema, relations, function (status, rs, types) {
                 if (!status)
                     return cb(false);
 
