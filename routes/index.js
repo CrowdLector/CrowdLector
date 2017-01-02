@@ -201,7 +201,7 @@ router.post('/resetSession', function (req, res) {
 });
 
 router.get('/results', function (req, res) {
-	PhraseState.PhraseState(config.minNumberOfAnswers ,function (err, positives, negatives, notDecided) {
+	PhraseState.PhraseState(config.minNumberOfAnswers, config.minDiff, function (err, positives, negatives, notDecided) {
 		if (err) {
 			res.render('error', {
 				message: "ERROR",
