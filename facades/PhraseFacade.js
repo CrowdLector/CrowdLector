@@ -52,7 +52,7 @@ module.exports = {
      * @param {function} callback Function with two parameters, err and data
      */
 	listPositive: function (minNumber, minDiff, callback) {
-		PhraseModel.find({ $where: "this.PositiveAnswerCount>this.NegativeAnswerCount && this.PositiveAnswerCount>=" + minNumber + "&& (this.PositiveAnswerCount >= " + minDiff + " || this.NegativeAnswerCount >= " + minDiff + ")" })
+		PhraseModel.find({ $where: "this.PositiveAnswerCount>this.NegativeAnswerCount && this.PositiveAnswerCount>=" + minNumber + "&& (this.PositiveAnswerCount-this.NegativeAnswerCount >= " + minDiff + " || this.NegativeAnswerCount-this.PositiveAnswerCount >= " + minDiff + ")" })
 			.sort({ 'Score': -1 }).exec(function (err, Phrases) {
 			if (err) {
 				callback({
@@ -72,7 +72,7 @@ module.exports = {
      * @param {function} callback Function with two parameters, err and data
      */
 	listNegative: function (minNumber, minDiff, callback) {
-		PhraseModel.find({ $where: "this.PositiveAnswerCount<this.NegativeAnswerCount && this.NegativeAnswerCount >= " + minNumber + "&& (this.PositiveAnswerCount >= " + minDiff + " || this.NegativeAnswerCount >= " + minDiff + ")" })
+		PhraseModel.find({ $where: "this.PositiveAnswerCount<this.NegativeAnswerCount && this.NegativeAnswerCount >= " + minNumber + "&& (this.PositiveAnswerCount - this.NegativeAnswerCount >= " + minDiff + " || this.NegativeAnswerCount - this.PositiveAnswerCount >= " + minDiff + ")" })
 			.sort({ 'Score': -1 }).exec(function (err, Phrases) {
 			if (err) {
 				callback({
@@ -92,7 +92,7 @@ module.exports = {
      * @param {function} callback Function with two parameters, err and data
      */
 	listNotDecided: function (minNumber, minDiff, callback) {
-		PhraseModel.find({ $where: "this.PositiveAnswerCount==this.NegativeAnswerCount || (this.NegativeAnswerCount+this.PositiveAnswerCount)<" + minNumber + "|| (this.PositiveAnswerCount < " + minDiff + " && this.NegativeAnswerCount < " + minDiff + ")" })
+		PhraseModel.find({ $where: "this.PositiveAnswerCount==this.NegativeAnswerCount || (this.NegativeAnswerCount + this.PositiveAnswerCount)<" + minNumber + "|| (this.PositiveAnswerCount - this.NegativeAnswerCount < " + minDiff + " && this.NegativeAnswerCount - this.PositiveAnswerCount < " + minDiff + ")" })
 			.sort({ 'Score': -1 }).exec(function (err, Phrases) {
 			if (err) {
 				callback({

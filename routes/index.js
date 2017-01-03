@@ -217,6 +217,8 @@ router.get('/results', function (req, res) {
 					positives: positives,
 					negatives: negatives,
 					notDecided: notDecided,
+					minNumber: config.minNumberOfAnswers,
+					minDiff: config.minDiff,
 					info: false
 				});
 		}
