@@ -12,7 +12,8 @@ var PhraseSchema = new Schema({
 	'Answers' : [Boolean],
 	'PositiveAnswerCount': { type: Number, default: 0 },
 	'NegativeAnswerCount': { type: Number, default: 0 },
-	'Users' : [Schema.Types.ObjectId]
+	'Users': [Schema.Types.ObjectId],
+	'ManualEvaluation': { type: String }
 });
 
 module.exports = mongoose.model('Phrase', PhraseSchema);
