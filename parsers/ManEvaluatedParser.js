@@ -29,11 +29,14 @@ var step_one = function (file, cb){
                 name: row.name,
                 phrase: row.phrase,
                 countCorrect: 0,
-                countIncorrect: 0
+                countIncorrect: 0,
+                count: 0
             };
 
             results.push(temp[row.name][row.phrase])
         }
+
+        temp[row.name][row.phrase].count += 1
 
         if (row.correct == 1)
             temp[row.name][row.phrase].countCorrect += 1;
@@ -55,33 +58,43 @@ module.exports = {
     statManEvaluated: function (file, cb){
         step_one(file, function (status, results){
             if (!status)
-                return cb(false)
+                return cb(false);
 
             var count = {
                 correct: 0,
                 incorrect: 0,
                 phrases: results.length,
-                relations: {
-                    total: 0
-                }
+                relations: []
             };
+
+            var relations = {}
 
             results.forEach(function (r){
                 count.correct += r.countCorrect;
                 count.incorrect += r.countIncorrect;
 
-                if (typeof count.relations[r.name] == "undefined"){
-                    count.relations.total += 1;
-                    count.relations[r.name] = {
-                        phrases: 0,
+                if (typeof relations[r.name] == "undefined"){
+                    relations.total += 1;
+                    relations[r.name] = {
+                        name: r.name,
+                        phrases: [],
+                        lengthPhrases: {},
+                        countPhrases: 0,
                         correct: 0,
                         incorrect: 0
                     }
+
+                    count.relations.push(relations[r.name])
                 }
 
-                count.relations[r.name].phrases += 1;
-                count.relations[r.name].correct += r.countCorrect;
-                count.relations[r.name].incorrect += r.countIncorrect;
+                if (typeof relations[r.name].lengthPhrases[r.phrase] == "undefined")
+                    relations[r.name].lengthPhrases[r.phrase] = 0;
+
+                relations[r.name].phrases.push(r.phrase);
+                relations[r.name].lengthPhrases[r.phrase] = r.count;
+                relations[r.name].countPhrases += 1;
+                relations[r.name].correct += r.countCorrect;
+                relations[r.name].incorrect += r.countIncorrect;
             })
 
             cb(true, count);

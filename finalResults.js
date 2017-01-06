@@ -3,7 +3,97 @@
  */
 
 var manEvaluatedParser = require("./parsers/ManEvaluatedParser");
+var config = require("./config");
+var PhraseFacade = require("./facades/PhraseFacade");
 
-manEvaluatedParser.statManEvaluated("./input/man_evaluated.tsv", function (status, data) {
-    console.log(status, data);
-});
+var mongoose = require('mongoose');
+
+function countUnknowPhrases(file_relations, db_relations) {
+    var count = {
+        found: 0,
+        countLength: [],
+        notFound: 0
+    };
+
+    file_relations.forEach(function (file_relation){
+        db_relations.forEach(function (db_relation){
+            if (file_relation.name == db_relation.name){
+                file_relation.phrases.forEach(function (file_phrase) {
+                    if (db_relation.phrases.indexOf(file_phrase) == -1)
+                        count.notFound +=1;
+                    else{
+                        count.found += 1;
+                        count.countLength.push({
+                            count: file_relation.lengthPhrases[file_phrase],
+                            name: file_relation.name,
+                            phrase: file_phrase
+                        })
+                    }
+                })
+            }
+        });
+    });
+
+    return count;
+}
+
+mongoose.connect('mongodb://localhost/CrowdLector');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+
+db.once('open', function() {
+    manEvaluatedParser.statManEvaluated("./input/man_evaluated.tsv", function (status, file) {
+        PhraseFacade.stats(config.minNumberOfAnswers, config.minDiff, function (error, db) {
+            console.log("Correct count original:", file.correct);
+            console.log("Incorrect count original: ", file.incorrect);
+            console.log();
+            console.log("Correct count after crowd:", db.correct);
+            console.log("Incorrect count after crowd: ", db.incorrect);
+            console.log();
+            var temp = countUnknowPhrases(file.relations, db.relations);
+
+            console.log("Fatti non corrispondenti a frasi valutate da crowd", temp.notFound);
+            console.log();
+            console.log("Frasi valutate da crow non corrispondenti a fatti", countUnknowPhrases(db.relations, file.relations).notFound)
+            console.log();
+
+            var count_relation = 0
+            file.relations.forEach(function (file_relation){
+                db.relations.forEach(function (db_relation){
+                    if (file_relation.name == db_relation.name){
+                        console.log("Relation:", db_relation.name);
+                        console.log("Correct count original:", file_relation.correct);
+                        console.log("Incorrect count original: ", file_relation.incorrect);
+                        console.log("Correct count after crowd:", db_relation.correct);
+                        console.log("Incorrect count after crowd: ", db_relation.incorrect);
+                        console.log();
+                        count_relation += 1;
+                    }
+                });
+            });
+
+            console.log("Relazioni presenti sul file e nel db", count_relation);
+
+            var relations = [];
+
+            db.relations.forEach(function (db_relation){
+                relations.push(db_relation.name);
+            });
+
+            console.log(relations);
+
+            file.relations.forEach(function (file_relation){
+                if (relations.indexOf(file_relation.name) == -1){
+                    console.log(file_relation.name)
+                }
+            });
+
+            temp.countLength.forEach(function (t){
+                console.log(t.name, t.phrase, t.count);
+            })
+
+        })
+    });
+})
+
