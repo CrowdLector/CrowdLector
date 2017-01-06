@@ -51,5 +51,40 @@ var step_one = function (file, cb){
 };
 
 module.exports = {
-    parseManEvaluated: step_one
+    parseManEvaluated: step_one,
+    statManEvaluated: function (file, cb){
+        step_one(file, function (status, results){
+            if (!status)
+                return cb(false)
+
+            var count = {
+                correct: 0,
+                incorrect: 0,
+                phrases: results.length,
+                relations: {
+                    total: 0
+                }
+            };
+
+            results.forEach(function (r){
+                count.correct += r.countCorrect;
+                count.incorrect += r.countIncorrect;
+
+                if (typeof count.relations[r.name] == "undefined"){
+                    count.relations.total += 1;
+                    count.relations[r.name] = {
+                        phrases: 0,
+                        correct: 0,
+                        incorrect: 0
+                    }
+                }
+
+                count.relations[r.name].phrases += 1;
+                count.relations[r.name].correct += r.countCorrect;
+                count.relations[r.name].incorrect += r.countIncorrect;
+            })
+
+            cb(true, count);
+        })
+    }
 };
