@@ -77,22 +77,6 @@ function selectQuestions(userId, page, resultsPerPage, minDiff, minAns, callback
 	});
 }
 
-function hasConsensus_old(answers, callback) {
-	var count = 0;
-	if (answers.length <= 1) {
-		callback(false);
-		return;
-	}
-	answers.forEach(function (answer, i, answersRef) {
-		count = answer ? count + 1 : count;
-		if (i == answersRef.length - 1) {
-			zeros = answersRef.length - count;
-			outcome = zeros != count && answersRef.length > 0;
-			callback(outcome);
-		}
-	});
-}
-
 /**
  * hasConsensus(minDiff, minAns, phrase, callback)
  *
@@ -104,11 +88,11 @@ function hasConsensus_old(answers, callback) {
  * 2 exported version available: 1 with initialized parameters, 1 with open parameters.
  */
 function hasConsensus(minDiff, minAns, phrase, callback) {
-	if (phrase.Answers.length <= 1)
+	if (phrase.Answers.length < minAns || phrase.PositiveAnswerCount == phrase.NegativeAnswerCount)
 		callback(false);
 	else {
 		diff = Math.abs(phrase.PositiveAnswerCount - phrase.NegativeAnswerCount);
-		outcome = diff >= minDiff && (phrase.PositiveAnswerCount >= minAns || phrase.NegativeAnswerCount >= minAns);
+		outcome = diff >= minDiff && phrase.Answers.length >= minAns;
 		callback(outcome);
 	}
 }
