@@ -286,5 +286,65 @@ module.exports = {
 				callback(0, model); //204
 			}
 		});
-	}
+	},
+
+	stats: function (minNumber, minDiff, callback) {
+        var self = this;
+
+        self.listPositive(minNumber, minDiff, function (error, positive) {
+            if (error)
+                return callback(error);
+
+            self.listNegative(minNumber, minDiff, function (error, negative){
+                if (error)
+                    return callback(error);
+
+                var results = [];
+                positive.forEach(function (n) {
+                    results.push(n);
+                });
+
+                negative.forEach(function (n) {
+                    results.push(n);
+                });
+
+                var count = {
+                    correct: 0,
+                    incorrect: 0,
+                    phrases: results.length,
+                    relations: []
+                };
+
+                var relations = {}
+
+                results.forEach(function (r){
+                    count.correct += r.PositiveAnswerCount;
+                    count.incorrect += r.NegativeAnswerCount;
+
+                    if (typeof relations[r.RelationName] == "undefined"){
+                        relations.total += 1;
+                        relations[r.RelationName] = {
+                            name: r.RelationName,
+                            phrases: [],
+                            countPhrases: 0,
+                            correct: 0,
+                            incorrect: 0,
+                            lengthPhrases: {},
+                        }
+
+                        count.relations.push(relations[r.RelationName])
+                    }
+
+                    relations[r.RelationName].phrases.push(r.Phrase);
+                    relations[r.RelationName].lengthPhrases[r.phrase] =  1;
+                    relations[r.RelationName].countPhrases += 1;
+                    relations[r.RelationName].correct += r.PositiveAnswerCount;
+                    relations[r.RelationName].incorrect += r.NegativeAnswerCount;
+                })
+
+                callback(true, count);
+
+            })
+        })
+    }
 };
