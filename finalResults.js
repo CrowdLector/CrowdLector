@@ -88,24 +88,25 @@ db.once('open', function() {
             var relations = [];
 
             results.forEach(function (result){
+                if (typeof mapRelations[result.name] == "undefined"){
+                    mapRelations[result.name] = {
+                        name: result.name,
+                        file_correct: 0,
+                        file_incorrect: 0,
+                        db_correct: 0,
+                        db_incorrect: 0
+                    }
+
+                    relations.push(mapRelations[result.name]);
+                }
+
+                mapRelations[result.name].file_correct += result.countCorrect;
+                mapRelations[result.name].file_incorrect += result.countIncorrect;
+
                 data.forEach(function (e){
                     if (result.name == e.RelationName && e.Phrase == result.phrase){
-                        if (typeof mapRelations[result.name] == "undefined"){
-                            mapRelations[result.name] = {
-                                name: result.name,
-                                file_correct: 0,
-                                file_incorrect: 0,
-                                db_correct: 0,
-                                db_incorrect: 0
-                            }
-
-                            relations.push(mapRelations[result.name]);
-                        }
-
-                        mapRelations[result.name].file_correct += result.countCorrect;
-                        mapRelations[result.name].file_incorrect += result.countIncorrect;
-                        mapRelations[result.name].db_correct += e.PositiveAnswerCount;
-                        mapRelations[result.name].db_incorrect += e.NegativeAnswerCount;
+                        mapRelations[result.name].db_correct += result.countCorrect;
+                        mapRelations[result.name].db_incorrect += result.countIncorrect;
                     }
                 })
             })
