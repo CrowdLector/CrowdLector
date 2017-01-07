@@ -130,7 +130,7 @@ db.once('open', function() {
                 db_incorrect += relation.db_incorrect;
             })
 
-            console.log("Totali");
+            console.log("Total count");
             console.log("Correct count original:", file_correct);
             console.log("Incorrect count original: ", file_incorrect);
             console.log("Correct count after crowd:", db_correct);
