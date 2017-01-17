@@ -11,4 +11,4 @@ Used tecnologies:
 - To populate the database run `node init` once. It requires MongoDB running, so run "start_mongo_service" (bat or sh depending on your OS) before.
 - Rename "config.example.js" in "config.js" and change inside data according to your needings.
 - Run "start_node_service" (bat or sh depending on your OS) or type `npm start`, then go to [http://localhost:3000](http://localhost:3000).
-
+- run `node finalResults` to print results to standard output.
